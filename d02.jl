@@ -19,17 +19,19 @@ end
 function valid(data)
     v = 0
     for c in data
-        n = count(i->(i==c["ltr"]), c["pas"])
-        if n >= c["low"] && n <= c["upp"]
+        if c["low"] <= count(i->(i==c["ltr"]), c["pas"]) <= c["upp"]
             v += 1
         end
     end
     v
 end
 
-Test.@test valid(read("i02t0")) == 2
+t = read("i02t0")
+inp = read("i02")
 
-@time println(valid(read("i02")))
+Test.@test valid(t) == 2
+
+@time println(valid(inp))
 
 function valid2(data)
     v = 0
@@ -41,6 +43,6 @@ function valid2(data)
     v
 end
 
-Test.@test valid2(read("i02t0")) == 1
+Test.@test valid2(t) == 1
 
-@time println(valid2(read("i02")))
+@time println(valid2(inp))

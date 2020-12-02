@@ -19,9 +19,12 @@ function find(target, nums)
     end
 end
 
-Test.@test find(2020, read("i01t0")) == 514579
+t = read("i01t0")
+inp = read("i01")
 
-@time println(find(2020, read("i01")))
+Test.@test find(2020, t) == 514579
+
+@time println(find(2020, inp))
 
 function find2(target, nums)
     for i in nums
@@ -35,6 +38,6 @@ function find2(target, nums)
     end
 end
 
-Test.@test find2(2020, read("i01t0")) == 241861950
+Test.@test find2(2020, t) == 241861950
 
-@time println(find2(2020, read("i01")))
+@time println(find2(2020, inp))
