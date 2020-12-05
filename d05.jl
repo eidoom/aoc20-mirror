@@ -16,7 +16,7 @@ function seat1d(data)
     low = 0
     upp = (1 << l) - 1
     for c in data
-        if c in ['F','L']
+        if c in ['F', 'L']
             upp -= div(upp - low, 2) + 1
         else
             low += div(upp - low, 2) + 1
@@ -26,7 +26,7 @@ function seat1d(data)
 end
 
 function id(data)
-    seat1d(data[1:7])*8+seat1d(data[8:10])
+    seat1d(data[1:7]) * 8 + seat1d(data[8:10])
 end
 
 inp = read_file("i05")
@@ -42,7 +42,7 @@ ids = map(s -> id(s), inp)
 
 function mine(data)
     l = sort(data)
-    p = first(l)-1
+    p = first(l) - 1
     for n in l
         if n != p + 1
             return p + 1

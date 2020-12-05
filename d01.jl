@@ -12,8 +12,8 @@ end
 function find(target, nums)
     for i in nums
         for j in nums
-            if i+j==target
-                return i*j
+            if i + j == target
+                return i * j
             end
         end
     end
@@ -30,8 +30,8 @@ function find2(target, nums)
     for i in nums
         for j in nums
             for k in nums
-                if i+j+k==target
-                    return i*j*k
+                if i + j + k == target
+                    return i * j * k
                 end
             end
         end

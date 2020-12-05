@@ -11,13 +11,13 @@ end
 
 function parse(data)
     pp = Dict{SubString{String},SubString{String}}[]
-    for b in split(data,"\n\n")
+    for b in split(data, "\n\n")
         b = strip(b)
-        b = replace(b,"\n"=>" ")
-        b = split(b," ")
-        b = [split(a,":") for a in b]
+        b = replace(b, "\n" => " ")
+        b = split(b, " ")
+        b = [split(a, ":") for a in b]
         b = Dict(b)
-        push!(pp,b)
+        push!(pp, b)
     end
     pp
 end
@@ -25,7 +25,7 @@ end
 function valid(data)
     n = 0
     for pp in data
-        if all(map(x -> haskey(pp, x), ["byr","iyr","eyr","hgt","hcl","ecl","pid"]))
+        if all(map(x -> haskey(pp, x), ["byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid"]))
             n += 1
         end
     end
@@ -44,16 +44,25 @@ Test.@test valid(dt) == 2
 function strict(data)
     n = 0
     for pp in data
-        if all(map(x -> haskey(pp, x), ["byr","iyr","eyr","hgt","hcl","ecl","pid"]))
-            if all([1920 <= Base.parse(UInt, pp["byr"]) <= 2002,
-                    2010 <= Base.parse(UInt, pp["iyr"]) <= 2020,
-                    2020 <= Base.parse(UInt, pp["eyr"]) <= 2030,
-                    length(pp["hgt"]) >= 4,
-                    (pp["hgt"][end-1:end] == "cm" && 150 <= Base.parse(UInt, pp["hgt"][1:end-2]) <= 193) || (pp["hgt"][end-1:end] == "in" && 59 <= Base.parse(UInt, pp["hgt"][1:end-2]) <= 76),
-                    length(pp["hcl"]) == 7 && pp["hcl"][1] == '#' && occursin(r"[a-f\d]{6}", pp["hcl"][2:7]),
-                    pp["ecl"] in ["amb" "blu" "brn" "gry" "grn" "hzl" "oth"],
-                    length(pp["pid"]) == 9,
-                   ])
+        if all(map(x -> haskey(pp, x), ["byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid"]))
+            if all([
+                1920 <= Base.parse(UInt, pp["byr"]) <= 2002,
+                2010 <= Base.parse(UInt, pp["iyr"]) <= 2020,
+                2020 <= Base.parse(UInt, pp["eyr"]) <= 2030,
+                length(pp["hgt"]) >= 4,
+                (
+                    pp["hgt"][(end - 1):end] == "cm" &&
+                    150 <= Base.parse(UInt, pp["hgt"][1:(end - 2)]) <= 193
+                ) || (
+                    pp["hgt"][(end - 1):end] == "in" &&
+                    59 <= Base.parse(UInt, pp["hgt"][1:(end - 2)]) <= 76
+                ),
+                length(pp["hcl"]) == 7 &&
+                pp["hcl"][1] == '#' &&
+                occursin(r"[a-f\d]{6}", pp["hcl"][2:7]),
+                pp["ecl"] in ["amb" "blu" "brn" "gry" "grn" "hzl" "oth"],
+                length(pp["pid"]) == 9,
+            ])
                 n += 1
             end
         end
