@@ -2,21 +2,21 @@
 
 import Test
 
+include("./com.jl")
+
 function read(name)
     a = []
-    open(name, "r") do f
-        for b in readlines(f)
-            pol, pas = split(b, ": ")
-            lim, ltr = split(pol, " ")
-            low, upp = split(lim, "-")
-            d = Dict(
-                "low" => parse(UInt, low),
-                "upp" => parse(UInt, upp),
-                "ltr" => first(ltr),
-                "pas" => pas,
-            )
-            push!(a, d)
-        end
+    for b in Com.file_lines(name)
+        pol, pas = split(b, ": ")
+        lim, ltr = split(pol, " ")
+        low, upp = split(lim, "-")
+        d = Dict(
+            "low" => parse(UInt, low),
+            "upp" => parse(UInt, upp),
+            "ltr" => first(ltr),
+            "pas" => pas,
+        )
+        push!(a, d)
     end
     a
 end

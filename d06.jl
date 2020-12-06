@@ -2,11 +2,10 @@
 
 import Test
 
+include("./com.jl")
+
 function read_file(name)
-    a = open(name, "r") do f
-        read(f, String)
-    end
-    map(i -> split(i, '\n'), split(strip(a), "\n\n"))
+    map(i -> split(i, '\n'), split(strip(Com.file_slurp(name)), "\n\n"))
 end
 
 function yes(data)

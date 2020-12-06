@@ -2,11 +2,7 @@
 
 import Test
 
-function read(name)
-    open(name, "r") do f
-        readlines(f)
-    end
-end
+include("./com.jl")
 
 function trees(data, di, dj)
     r = length(first(data))
@@ -21,8 +17,8 @@ function trees(data, di, dj)
     t
 end
 
-t = read("i03t0")
-inp = read("i03")
+t = Com.file_lines("i03t0")
+inp = Com.file_lines("i03")
 
 Test.@test trees(t, 1, 3) == 7
 

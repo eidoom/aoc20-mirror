@@ -2,13 +2,9 @@
 
 import Test
 
-function read_file(name)
-    open(name, "r") do f
-        readlines(f)
-    end
-end
+include("./com.jl")
 
-t = read_file("i05t0")
+t = Com.file_lines("i05t0")
 
 function seat1d(data)
     l = length(data)
@@ -28,7 +24,7 @@ function id(data)
     seat1d(data[1:7]) * 8 + seat1d(data[8:10])
 end
 
-inp = read_file("i05")
+inp = Com.file_lines("i05")
 
 Test.@test id(t[1]) == 357
 Test.@test id(t[2]) == 567

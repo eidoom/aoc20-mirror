@@ -2,10 +2,10 @@
 
 import Test
 
+include("./com.jl")
+
 function read(name)
-    open(name, "r") do f
-        map(b -> parse(UInt, b), readlines(f))
-    end
+    map(b -> parse(UInt, b), Com.file_lines(name))
 end
 
 function find(target, nums)
