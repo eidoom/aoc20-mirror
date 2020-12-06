@@ -30,3 +30,5 @@ Test.@test two(t) == 6
 @time b = two(inp)
 println(b)
 Test.@test b == 3158
+
+Test.@test two(read_file("i06t1")) == 3512
