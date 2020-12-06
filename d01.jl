@@ -4,7 +4,7 @@ import Test
 
 include("./com.jl")
 
-function read(name)
+function get_data(name)
     map(b -> parse(UInt, b), Com.file_lines(name))
 end
 
@@ -18,8 +18,8 @@ function find(target, nums)
     end
 end
 
-t = read("i01t0")
-inp = read("i01")
+t = get_data("i01t0")
+inp = get_data("i01")
 
 Test.@test find(2020, t) == 514579
 

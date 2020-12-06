@@ -7,9 +7,8 @@ include("./com.jl")
 t = Com.file_lines("i05t0")
 
 function seat1d(data)
-    l = length(data)
     low = 0
-    upp = (1 << l) - 1
+    upp = (1 << length(data)) - 1
     for c in data
         if c in ['F', 'L']
             upp -= div(upp - low, 2) + 1

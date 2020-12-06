@@ -4,7 +4,7 @@ import Test
 
 include("./com.jl")
 
-function read(name)
+function get_data(name)
     a = []
     for b in Com.file_lines(name)
         pol, pas = split(b, ": ")
@@ -22,17 +22,11 @@ function read(name)
 end
 
 function valid(data)
-    v = 0
-    for c in data
-        if c["low"] <= count(i -> (i == c["ltr"]), c["pas"]) <= c["upp"]
-            v += 1
-        end
-    end
-    v
+    count(c -> c["low"] <= count(i -> (i == c["ltr"]), c["pas"]) <= c["upp"], data)
 end
 
-t = read("i02t0")
-inp = read("i02")
+t = get_data("i02t0")
+inp = get_data("i02")
 
 Test.@test valid(t) == 2
 
@@ -41,13 +35,7 @@ println(a)
 Test.@test a == 467
 
 function valid2(data)
-    v = 0
-    for c in data
-        if xor(c["pas"][c["low"]] == c["ltr"], c["pas"][c["upp"]] == c["ltr"])
-            v += 1
-        end
-    end
-    v
+    count(c -> xor(c["pas"][c["low"]] == c["ltr"], c["pas"][c["upp"]] == c["ltr"]), data)
 end
 
 Test.@test valid2(t) == 1

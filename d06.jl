@@ -9,17 +9,7 @@ function read_file(name)
 end
 
 function yes(data)
-    ayes = 0
-    for group in data
-        gyes = Set()
-        for person in group
-            for question in person
-                push!(gyes, question)
-            end
-        end
-        ayes += length(gyes)
-    end
-    ayes
+    sum(map(group -> length(Set(Iterators.flatten(group))), data))
 end
 
 t = read_file("i06t0")
@@ -32,11 +22,7 @@ println(a)
 Test.@test a == 6297
 
 function two(data)
-    ayes = 0
-    for group in data
-        ayes += length(intersect(map(i -> Set(i), group)...))
-    end
-    ayes
+    sum(map(group -> length(intersect(map(i -> Set(i), group)...)), data))
 end
 
 Test.@test two(t) == 6
