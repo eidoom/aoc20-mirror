@@ -3,33 +3,22 @@
 import Test
 
 function read_file(name)
-    f = open(name, "r")
-    a = read(f, String)
-    close(f)
+    a = open(name, "r") do f
+        read(f, String)
+    end
     strip(a)
 end
 
 function parse(data)
-    pp = Dict{SubString{String},SubString{String}}[]
-    for b in split(data, "\n\n")
-        b = strip(b)
-        b = replace(b, "\n" => " ")
-        b = split(b, " ")
-        b = [split(a, ":") for a in b]
-        b = Dict(b)
-        push!(pp, b)
-    end
-    pp
+    map(a -> Dict(map(b -> split(b, ":"), split(a))), split(data, "\n\n"))
 end
 
 function valid(data)
-    n = 0
-    for pp in data
-        if all(map(x -> haskey(pp, x), ["byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid"]))
-            n += 1
-        end
-    end
-    n
+    count(
+        pp ->
+            all(map(x -> haskey(pp, x), ["byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid"])),
+        data,
+    )
 end
 
 t = read_file("i04t0")
@@ -39,13 +28,17 @@ d = parse(inp)
 
 Test.@test valid(dt) == 2
 
-@time println(valid(d))
+@time a = valid(d)
+println(a)
+Test.@test a == 226
 
 function strict(data)
-    n = 0
-    for pp in data
-        if all(map(x -> haskey(pp, x), ["byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid"]))
-            if all([
+    count(
+        pp ->
+            all(map(
+                x -> haskey(pp, x),
+                ["byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid"],
+            )) && all([
                 1920 <= Base.parse(UInt, pp["byr"]) <= 2002,
                 2010 <= Base.parse(UInt, pp["iyr"]) <= 2020,
                 2020 <= Base.parse(UInt, pp["eyr"]) <= 2030,
@@ -58,16 +51,13 @@ function strict(data)
                     59 <= Base.parse(UInt, pp["hgt"][1:(end - 2)]) <= 76
                 ),
                 length(pp["hcl"]) == 7 &&
-                pp["hcl"][1] == '#' &&
-                occursin(r"[a-f\d]{6}", pp["hcl"][2:7]),
+                    pp["hcl"][1] == '#' &&
+                    occursin(r"[a-f\d]{6}", pp["hcl"][2:7]),
                 pp["ecl"] in ["amb" "blu" "brn" "gry" "grn" "hzl" "oth"],
                 length(pp["pid"]) == 9,
-            ])
-                n += 1
-            end
-        end
-    end
-    n
+            ]),
+        data,
+    )
 end
 
 Test.@test strict(dt) == 2
@@ -80,4 +70,6 @@ t1 = read_file("i04t1")
 dt1 = parse(t1)
 Test.@test strict(dt1) == 0
 
-@time println(strict(d))
+@time b = strict(d)
+println(b)
+Test.@test b == 160

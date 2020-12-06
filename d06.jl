@@ -3,9 +3,9 @@
 import Test
 
 function read_file(name)
-    f = open(name, "r")
-    a = read(f, String)
-    close(f)
+    a = open(name, "r") do f
+        read(f, String)
+    end
     map(i -> split(i, '\n'), split(strip(a), "\n\n"))
 end
 
@@ -27,7 +27,10 @@ t = read_file("i06t0")
 inp = read_file("i06")
 
 Test.@test yes(t) == 11
-@time println(yes(inp))
+
+@time a = yes(inp)
+println(a)
+Test.@test a == 6297
 
 function two(data)
     ayes = 0
@@ -38,4 +41,7 @@ function two(data)
 end
 
 Test.@test two(t) == 6
-@time println(two(inp))
+
+@time b = two(inp)
+println(b)
+Test.@test b == 3158

@@ -3,10 +3,9 @@
 import Test
 
 function read(name)
-    f = open(name, "r")
-    d = [parse(UInt, b) for b in readlines(f)]
-    close(f)
-    d
+    open(name, "r") do f
+        map(b -> parse(UInt, b), readlines(f))
+    end
 end
 
 function find(target, nums)
@@ -24,7 +23,9 @@ inp = read("i01")
 
 Test.@test find(2020, t) == 514579
 
-@time println(find(2020, inp))
+@time a = find(2020, inp)
+println(a)
+Test.@test a == 73371
 
 function find2(target, nums)
     for i in nums
@@ -40,4 +41,6 @@ end
 
 Test.@test find2(2020, t) == 241861950
 
-@time println(find2(2020, inp))
+@time b = find2(2020, inp)
+println(b)
+Test.@test b == 127642310

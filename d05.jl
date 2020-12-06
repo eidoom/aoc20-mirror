@@ -3,10 +3,9 @@
 import Test
 
 function read_file(name)
-    f = open(name, "r")
-    a = readlines(f)
-    close(f)
-    a
+    open(name, "r") do f
+        readlines(f)
+    end
 end
 
 t = read_file("i05t0")
@@ -38,7 +37,9 @@ Test.@test id(t[4]) == 820
 
 ids = map(s -> id(s), inp)
 
-@time println(maximum(ids))
+@time a = maximum(ids)
+println(a)
+Test.@test a == 994
 
 function mine(data)
     l = sort(data)
@@ -52,4 +53,6 @@ function mine(data)
     end
 end
 
-@time println(mine(ids))
+@time b = mine(ids)
+println(b)
+Test.@test b == 741

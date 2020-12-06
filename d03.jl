@@ -3,10 +3,9 @@
 import Test
 
 function read(name)
-    f = open(name, "r")
-    a = readlines(f)
-    close(f)
-    a
+    open(name, "r") do f
+        readlines(f)
+    end
 end
 
 function trees(data, di, dj)
@@ -27,7 +26,9 @@ inp = read("i03")
 
 Test.@test trees(t, 1, 3) == 7
 
-@time println(trees(inp, 1, 3))
+@time a = trees(inp, 1, 3)
+println(a)
+Test.@test a == 207
 
 function trees2(data)
     trees(data, 1, 1) *
@@ -39,4 +40,6 @@ end
 
 Test.@test trees2(t) == 336
 
-@time println(trees2(inp))
+@time b = trees2(inp)
+println(b)
+Test.@test b == 2655892800
