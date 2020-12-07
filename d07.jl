@@ -4,10 +4,6 @@ import Test
 
 include("./com.jl")
 
-function read_file(name)
-    Com.file_lines(name)
-end
-
 #= abstract type Vertex end =#
 
 #= struct Edge{V<:Vertex} =#
@@ -75,8 +71,8 @@ function first(data)
     length(found) - 1
 end
 
-t = read_file("i07t0")
-inp = read_file("i07")
+t = Com.file_lines("i07t0")
+inp = Com.file_lines("i07")
 
 Test.@test first(t) == 4
 
@@ -133,7 +129,7 @@ end
 
 Test.@test second(t) == 32
 
-t1 = read_file("i07t1")
+t1 = Com.file_lines("i07t1")
 Test.@test second(t1) == 126
 
 @time b = second(inp)
