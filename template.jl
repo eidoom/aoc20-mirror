@@ -16,7 +16,7 @@ t = read_file("iNNt0")
 inp = read_file("iNN")
 
 println(t)
-println(read_file(t))
+println(first(t))
 #= Test.@test first(t) == 0 =#
 
 #= @time a = first(inp) =#
