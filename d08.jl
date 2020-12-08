@@ -6,7 +6,7 @@ include("./com.jl")
 
 function read_file(name)
     a = map(line -> split(line), Com.file_lines(name))
-    [(c, parse(Int,n)) for (c, n) in a]
+    [[c, parse(Int,n)] for (c, n) in a]
 end
 
 function first(data)
@@ -38,13 +38,41 @@ Test.@test first(t) == 5
 println(a)
 Test.@test a == 1331
 
-#= function second(data) =#
-#=     data =#
-#= end =#
+function second(data)
+    l = length(data)
+    for k in 1:l
+        d = deepcopy(data)
+        if d[k][1] == "nop"
+            d[k][1] = "jmp"
+        elseif d[k][1] == "jmp"
+            d[k][1] = "nop"
+        else
+            continue
+        end
 
-#= println(second(t)) =#
-#= Test.@test second(t) == 0 =#
+        a = 0
+        i = 1
+        v = fill(0, l)
+        while all(map(e -> e < 2, v))
+            if i > l
+                return a
+            end
+            v[i] += 1
+            c, n = d[i]
+            if c == "acc"
+                a += n
+                i += 1
+            elseif c == "jmp"
+                i += n
+            elseif c == "nop"
+                i += 1
+            end
+        end
+    end
+end
 
-#= @time b = second(inp) =#
-#= println(b) =#
-#= Test.@test b == 0 =#
+Test.@test second(t) == 8
+
+@time b = second(inp)
+println(b)
+Test.@test b == 1121
