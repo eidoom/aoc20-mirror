@@ -45,19 +45,15 @@ Test.@test first(t) == 5
 println(a)
 Test.@test a == 1331
 
-function second(data)
-    for k = 1:length(data)
-        d = deepcopy(data)
-        if d[k][1] == "nop"
-            d[k][1] = "jmp"
-        elseif d[k][1] == "jmp"
-            d[k][1] = "nop"
-        else
-            continue
-        end
-        b, a = interpret(d)
-        if b
-            return a
+function second(d)
+    for k = 1:length(d)
+        if d[k][1] in ("nop", "jmp")
+            d[k][1] = d[k][1] == "nop" ? "jmp" : "nop"
+            b, a = interpret(d)
+            if b
+                return a
+            end
+            d[k][1] = d[k][1] == "nop" ? "jmp" : "nop"
         end
     end
 end
