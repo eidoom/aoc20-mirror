@@ -9,9 +9,9 @@ function read_file(name)
     [[c, parse(Int,n)] for (c, n) in a]
 end
 
-function first(data)
-    a = 0
+function interpret(data)
     l = length(data)
+    a = 0
     i = 1
     v = fill(0, l)
     while all(map(e -> e < 2, v))
@@ -24,9 +24,16 @@ function first(data)
         elseif c == "nop"
             i += 1
         end
+        if i > l
+            return (true, a)
+        end
         v[i] += 1
     end
-    a
+    (false, a)
+end
+
+function first(data)
+    interpret(data)[2]
 end
 
 t = read_file("i08t0")
@@ -39,8 +46,7 @@ println(a)
 Test.@test a == 1331
 
 function second(data)
-    l = length(data)
-    for k in 1:l
+    for k in 1:length(data)
         d = deepcopy(data)
         if d[k][1] == "nop"
             d[k][1] = "jmp"
@@ -49,24 +55,9 @@ function second(data)
         else
             continue
         end
-
-        a = 0
-        i = 1
-        v = fill(0, l)
-        while all(map(e -> e < 2, v))
-            if i > l
-                return a
-            end
-            v[i] += 1
-            c, n = d[i]
-            if c == "acc"
-                a += n
-                i += 1
-            elseif c == "jmp"
-                i += n
-            elseif c == "nop"
-                i += 1
-            end
+        b, a = interpret(d)
+        if b
+            return a
         end
     end
 end
