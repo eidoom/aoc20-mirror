@@ -6,7 +6,7 @@ include("./com.jl")
 
 function read_file(name)
     a = map(line -> split(line), Com.file_lines(name))
-    [[c, parse(Int,n)] for (c, n) in a]
+    [[c, parse(Int, n)] for (c, n) in a]
 end
 
 function interpret(data)
@@ -46,7 +46,7 @@ println(a)
 Test.@test a == 1331
 
 function second(data)
-    for k in 1:length(data)
+    for k = 1:length(data)
         d = deepcopy(data)
         if d[k][1] == "nop"
             d[k][1] = "jmp"
