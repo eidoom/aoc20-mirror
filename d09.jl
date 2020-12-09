@@ -36,8 +36,8 @@ Test.@test a == 57195069
 
 function second(data, ans)
     len = length(data)
-    for l in 1:len
-        for i in 1:(len - l)
+    for l = 1:len
+        for i = 1:(len - l)
             if ans == sum(data[i:(i + l)])
                 return minimum(data[i:(i + l)]) + maximum(data[i:(i + l)])
             end
