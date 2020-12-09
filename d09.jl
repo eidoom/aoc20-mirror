@@ -17,7 +17,6 @@ function first(data, preamble)
                 push!(sums, data[ii] + data[jj])
             end
         end
-        #= println(sums) =#
         if !(data[i + preamble] in sums)
             return data[i + preamble]
         end
