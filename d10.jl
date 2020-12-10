@@ -35,7 +35,7 @@ println(a)
 Test.@test a == 2312
 
 function second(data)
-    cache = Dict()
+    cache = Dict(1=>1, 2=>2, 3=>4)
     pushfirst!(data, 0)
     count = 0
     total = 1
