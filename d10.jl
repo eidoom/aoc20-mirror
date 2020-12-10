@@ -13,7 +13,7 @@ function first(data)
     one = data[1] == 1 ? 1 : 0
     three = 1 + (data[1] == 3 ? 1 : 0)
     for i = 2:length(data)
-        j=data[i]-data[i-1]
+        j = data[i] - data[i - 1]
         if j == 1
             one += 1
         elseif j == 3
@@ -27,19 +27,20 @@ t0 = read_file("i10t0")
 t1 = read_file("i10t1")
 inp = read_file("i10")
 
-Test.@test first(t0) == 35   
+Test.@test first(t0) == 35
 Test.@test first(t1) == 220
 
 @time a = first(inp)
 println(a)
-#= Test.@test a == 0 =#
+Test.@test a == 2312
 
-#= function second(data) =#
-#=     data =#
-#= end =#
+function second(data)
+    data
+end
 
-#= println(second(t)) =#
-#= Test.@test second(t) == 0 =#
+println(second(t0))
+#= Test.@test second(t0) == 0 =#
+#= Test.@test second(t1) == 0 =#
 
 #= @time b = second(inp) =#
 #= println(b) =#
