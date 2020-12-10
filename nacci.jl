@@ -41,7 +41,9 @@ function trib(n, cache = Dict())
 end
 
 #= ---------------------------------------------------------------- =#
-#= Holds for 1 <= n <= 58 =#
+#= From https://en.wikipedia.org/wiki/Generalizations_of_Fibonacci_numbers#Tribonacci_numbers =#
+#= which is compact version of: https://vixra.org/pdf/1410.0054v6.pdf Formula 2 =#
+#= In Julia, holds for 1 <= n <= 58. Works after in Mathematica, why breaks in Julia? =#
 #= Slower =#
 
 #= function trib_ks() =#
