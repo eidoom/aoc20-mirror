@@ -2,6 +2,8 @@ module Nacci
 
 export fib
 export trib
+#= export trib_ks =#
+#= export trib_alt =#
 export trib4
 
 #= These are unity indexed (blame Julia not me) =#
@@ -37,6 +39,31 @@ function trib(n, cache = Dict())
         cache[n - 1] + cache[n - 2] + cache[n - 3]
     end
 end
+
+#= ---------------------------------------------------------------- =#
+#= Holds for 1 <= n <= 58 =#
+#= Slower =#
+
+#= function trib_ks() =#
+#=     sr = sqrt(33) =#
+#=     tt = 3 * sr =#
+#=     ap = cbrt(19 + tt) =#
+#=     am = cbrt(19 - tt) =#
+#=     b = cbrt(586 + 102 * sr) =#
+#=     k = 3 * b / (b * (b - 2) + 4) =#
+#=     base = (ap + am + 1) / 3 =#
+#=     (k, base) =#
+#= end =#
+
+#= function trib_alt(n, k, base) =#
+#=     round(UInt, k * base^(n - 2), RoundNearestTiesUp) =#
+#= end =#
+
+#= function trib_alt(n) =#
+#=     trib_alt(n, trib_ks()...) =#
+#= end =#
+
+#= ---------------------------------------------------------------- =#
 
 function trib4(n, cache = Dict())
     #= 1, 2, 4, 7, 13, 24, ... =#
