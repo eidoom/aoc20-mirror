@@ -24,7 +24,7 @@ function fib(n, cache = Dict())
 end
 
 #= https://en.wikipedia.org/wiki/Generalizations_of_Fibonacci_numbers#Tribonacci_numbers =#
-function trib(n, cache = Dict())
+function trib(n, cache = Dict(1=>0, 2=>0, 3=>1))
     #= 0, 0, 1, 1, 2, 4, ... =#
     if n < 3
         0
@@ -67,7 +67,7 @@ end
 
 #= ---------------------------------------------------------------- =#
 
-function trib4(n, cache = Dict())
+function trib4(n, cache = Dict(1=>1, 2=>2, 3=>4))
     #= 1, 2, 4, 7, 13, 24, ... =#
     if n == 1
         1
