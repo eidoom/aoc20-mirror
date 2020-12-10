@@ -9,7 +9,7 @@ export trib4
 #= These are unity indexed (blame Julia not me) =#
 
 #= https://en.wikipedia.org/wiki/Fibonacci_number =#
-function fib(n, cache = Dict())
+function fib(n::Int, cache = Dict{Int,Int}(1 => 0, 2 => 1))::Int
     #= 0, 1, 1, 2, 3, 5, ... =#
     if n < 3
         n - 1
@@ -24,7 +24,7 @@ function fib(n, cache = Dict())
 end
 
 #= https://en.wikipedia.org/wiki/Generalizations_of_Fibonacci_numbers#Tribonacci_numbers =#
-function trib(n, cache = Dict(1=>0, 2=>0, 3=>1))
+function trib(n::Int, cache = Dict{Int,Int}(1 => 0, 2 => 0, 3 => 1))::Int
     #= 0, 0, 1, 1, 2, 4, ... =#
     if n < 3
         0
@@ -43,7 +43,7 @@ end
 #= ---------------------------------------------------------------- =#
 #= From https://en.wikipedia.org/wiki/Generalizations_of_Fibonacci_numbers#Tribonacci_numbers =#
 #= which is compact version of: https://vixra.org/pdf/1410.0054v6.pdf Formula 2 =#
-#= In Julia, holds for 1 <= n <= 58. Works after in Mathematica, why breaks in Julia? =#
+#= In Julia, holds for 1 <= n <= 58. Works after in Mathematica, why breaks in Julia? Types? =#
 #= Slower =#
 
 #= function trib_ks() =#
@@ -67,7 +67,7 @@ end
 
 #= ---------------------------------------------------------------- =#
 
-function trib4(n, cache = Dict(1=>1, 2=>2, 3=>4))
+function trib4(n::Int, cache = Dict{Int,Int}(1 => 1, 2 => 2, 3 => 4))::Int
     #= 1, 2, 4, 7, 13, 24, ... =#
     if n == 1
         1

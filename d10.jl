@@ -6,7 +6,7 @@ include("./com.jl")
 include("./nacci.jl")
 
 function read_file(name)
-    sort(map(x -> parse(UInt, x), Com.file_lines(name)))
+    sort(map(x -> parse(Int, x), Com.file_lines(name)))
 end
 
 function first(data)
@@ -35,7 +35,7 @@ println(a)
 Test.@test a == 2312
 
 function second(data)
-    cache = Dict(1=>1, 2=>2, 3=>4)
+    cache = Dict{Int, Int}(1=>1, 2=>2, 3=>4)
     pushfirst!(data, 0)
     count = 0
     total = 1
