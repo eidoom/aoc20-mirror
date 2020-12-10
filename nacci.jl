@@ -32,4 +32,19 @@ function trib(n, cache = Dict())
     end
 end
 
+#= function trib(n, cache = Dict()) =#
+#=     if n < 3 =#
+#=         0 =#
+#=     elseif n == 3 =#
+#=         1 =#
+#=     else =#
+#=         for m = (n - 3):(n - 1) =#
+#=             if !haskey(cache, m) =#
+#=                 cache[m] = trib(m, cache) =#
+#=             end =#
+#=         end =#
+#=         cache[n - 1] + cache[n - 2] + cache[n - 3] =#
+#=     end =#
+#= end =#
+
 end

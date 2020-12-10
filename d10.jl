@@ -6,7 +6,7 @@ include("./com.jl")
 include("./nacci.jl")
 
 function read_file(name)
-    sort(map(x -> parse(Int, x), Com.file_lines(name)))
+    sort(map(x -> parse(UInt, x), Com.file_lines(name)))
 end
 
 function first(data)
