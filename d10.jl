@@ -45,13 +45,13 @@ function second(data)
             count += 1
         else
             if count > 1
-                total *= Nacci.trib(count, cache)
+                total *= Nacci.trib4(count, cache)
             end
             count = 0
         end
     end
     if count > 1
-        total *= Nacci.trib(count, cache)
+        total *= Nacci.trib4(count, cache)
     end
     total
 end

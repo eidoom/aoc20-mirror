@@ -1,10 +1,16 @@
 module Nacci
+
 export fib
 export trib
+export trib4
 
+#= These are unity indexed (blame Julia not me) =#
+
+#= https://en.wikipedia.org/wiki/Fibonacci_number =#
 function fib(n, cache = Dict())
-    if n <= 1
-        n
+    #= 0, 1, 1, 2, 3, 5, ... =#
+    if n < 3
+        n - 1
     else
         for m in (n - 1, n - 2)
             if !haskey(cache, m)
@@ -15,7 +21,25 @@ function fib(n, cache = Dict())
     end
 end
 
+#= https://en.wikipedia.org/wiki/Generalizations_of_Fibonacci_numbers#Tribonacci_numbers =#
 function trib(n, cache = Dict())
+    #= 0, 0, 1, 1, 2, 4, ... =#
+    if n < 3
+        0
+    elseif n == 3
+        1
+    else
+        for m = (n - 3):(n - 1)
+            if !haskey(cache, m)
+                cache[m] = trib(m, cache)
+            end
+        end
+        cache[n - 1] + cache[n - 2] + cache[n - 3]
+    end
+end
+
+function trib4(n, cache = Dict())
+    #= 1, 2, 4, 7, 13, 24, ... =#
     if n == 1
         1
     elseif n == 2
@@ -31,20 +55,5 @@ function trib(n, cache = Dict())
         cache[n - 1] + cache[n - 2] + cache[n - 3]
     end
 end
-
-#= function trib(n, cache = Dict()) =#
-#=     if n < 3 =#
-#=         0 =#
-#=     elseif n == 3 =#
-#=         1 =#
-#=     else =#
-#=         for m = (n - 3):(n - 1) =#
-#=             if !haskey(cache, m) =#
-#=                 cache[m] = trib(m, cache) =#
-#=             end =#
-#=         end =#
-#=         cache[n - 1] + cache[n - 2] + cache[n - 3] =#
-#=     end =#
-#= end =#
 
 end
