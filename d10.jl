@@ -3,6 +3,7 @@
 import Test
 
 include("./com.jl")
+include("./nacci.jl")
 
 function read_file(name)
     sort(map(x -> parse(Int, x), Com.file_lines(name)))
@@ -33,37 +34,8 @@ Test.@test first(t1) == 220
 println(a)
 Test.@test a == 2312
 
-#= function fib(n, cache = Dict()) =#
-#=     if n <= 1 =#
-#=         n =#
-#=     else =#
-#=         for m in (n - 1, n - 2) =#
-#=             if !haskey(cache, m) =#
-#=                 cache[m] = fib(m, cache) =#
-#=             end =#
-#=         end =#
-#=         cache[n - 1] + cache[n - 2] =#
-#=     end =#
-#= end =#
-
-function trib(n, cache = Dict())
-    if n == 1
-        1
-    elseif n == 2
-        2
-    elseif n == 3
-        4
-    else
-        for m = (n - 3):(n - 1)
-            if !haskey(cache, m)
-                cache[m] = trib(m, cache)
-            end
-        end
-        cache[n - 1] + cache[n - 2] + cache[n - 3]
-    end
-end
-
 function second(data)
+    cache = Dict()
     pushfirst!(data, 0)
     count = 0
     total = 1
@@ -73,13 +45,13 @@ function second(data)
             count += 1
         else
             if count > 1
-                total *= trib(count)
+                total *= Nacci.trib(count, cache)
             end
             count = 0
         end
     end
     if count > 1
-        total *= trib(count)
+        total *= Nacci.trib(count, cache)
     end
     total
 end
