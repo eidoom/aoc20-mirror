@@ -8,24 +8,23 @@ function read_file(name)
     map(line -> (line[1], parse(Int, line[2:end])), Com.file_lines(name))
 end
 
+conv = Dict('N' => [0, 1], 'E' => [1, 0], 'S' => [0, -1], 'W' => [-1, 0])
+
 function first(navs)
     facing = 'E'
-    EN = [0, 0]
+    ship = [0, 0]  # EN
     to_deg = Dict('N' => 0, 'E' => 90, 'S' => 180, 'W' => 270)
     to_dir = Dict(map(reverse, collect(to_deg)))
-    conv = Dict('N' => [0, 1], 'E' => [1, 0], 'S' => [0, -1], 'W' => [-1, 0])
     for (act, val) in navs
         if act === 'F'
-            EN += val * conv[facing]
+            ship += val * conv[facing]
         elseif act in ('N', 'E', 'S', 'W')
-            EN += val * conv[act]
-        elseif act === 'R'
-            facing = to_dir[mod(to_deg[facing] + val, 360)]
-        elseif act === 'L'
-            facing = to_dir[mod(to_deg[facing] - val, 360)]
+            ship += val * conv[act]
+        else
+            facing = to_dir[mod(to_deg[facing] + (act === 'R' ? 1 : -1) * val, 360)]
         end
     end
-    abs(EN[1]) + abs(EN[2])
+    sum(map(i -> abs(i), ship))
 end
 
 t = read_file("i12t0")
@@ -41,25 +40,21 @@ Test.@test a == 904
 function second(navs)
     waypoint = [10, 1]  # EN
     ship = [0, 0]  # EN
-    to_deg = Dict('N' => 0, 'E' => 90, 'S' => 180, 'W' => 270)
-    to_dir = Dict(map(reverse, collect(to_deg)))
-    conv = Dict('N' => [0, 1], 'E' => [1, 0], 'S' => [0, -1], 'W' => [-1, 0])
     for (act, val) in navs
         if act === 'F'
             ship += val * waypoint
         elseif act in ('N', 'E', 'S', 'W')
             waypoint += val * conv[act]
-        elseif act === 'R'
-            println(act, " ", val)
+        else
             x, y = waypoint
-            waypoint = [x * cosd(val) + y * sind(val), - x * sind(val) + y * cosd(val)]
-        elseif act === 'L'
-            x, y = waypoint
-            waypoint = [x * cosd(val) - y * sind(val), x * sind(val) + y * cosd(val)]
+            if act === 'R'
+                val *= -1
+            end
+            waypoint =
+                [Int(x * cosd(val) - y * sind(val)), Int(x * sind(val) + y * cosd(val))]
         end
-        println(ship, " ", waypoint)
     end
-    abs(ship[1]) + abs(ship[2])
+    sum(map(i -> abs(i), ship))
 end
 
 println(second(t))
