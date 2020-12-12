@@ -5,7 +5,7 @@ import Test
 include("./com.jl")
 
 function read_file(name)
-    map(l -> [a for a in l], Com.file_lines(name))
+    map(line -> collect(line), Com.file_lines(name))
 end
 
 function first(data)
@@ -118,17 +118,17 @@ end
 t = read_file("i11t0")
 inp = read_file("i11")
 
-Test.@test first(t) == 37
+Test.@test first(t) === 37
 
 @time a = first(inp)
 println(a)
-Test.@test a == 2126
+Test.@test a === 2126
 
 function ray(data, i, j, di, dj, w, h)
     while true
         i += di
         j += dj
-        if !(1 <= i <= h && 1 <= j <= h) || data[i][j] === 'L'
+        if !(1 <= i <= h && 1 <= j <= w) || data[i][j] === 'L'
             return false
         elseif data[i][j] === '#'
             return true
@@ -144,14 +144,12 @@ end
 #= end =#
 
 function second(d)
-    #= data = [] =#
     new = deepcopy(d)
     h = length(new)
     w = length(new[1])
     c = 1
     new_c = 0
     dirs = ((-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1))
-    #= while new != data =#
     while new_c != c
         data = deepcopy(new)
         c = new_c
@@ -169,13 +167,12 @@ function second(d)
             end
         end
         new_c = count(p -> p === '#', Iterators.flatten(new))
-        #= show(new) =#
     end
     c
 end
 
-Test.@test second(t) == 26
+Test.@test second(t) === 26
 
 @time b = second(inp)
 println(b)
-#= Test.@test b == 0 =#
+Test.@test b === 1914
