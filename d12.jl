@@ -57,6 +57,26 @@ function second(navs)
     sum(map(i -> abs(i), ship))
 end
 
+#= # slow =#
+#= function second_alt(navs) =#
+#=     waypoint = [10, 1]  # EN =#
+#=     ship = [0, 0]  # EN =#
+#=     rot_l = Dict(90 => [0 -1; 1 0], 180 => [-1 0; 0 -1], 270 => [0 1; -1 0])  # L (CCW) =#
+#=     rot_r = Dict(90 => [0 1; -1 0], 180 => [-1 0; 0 -1], 270 => [0 -1; 1 0])  # R (CW) =#
+#=     for (act, val) in navs =#
+#=         if act === 'F' =#
+#=             ship += val * waypoint =#
+#=         elseif act in ('N', 'E', 'S', 'W') =#
+#=             waypoint += val * conv[act] =#
+#=         elseif act === 'R' =#
+#=             waypoint = rot_r[val] * waypoint =#
+#=         else =#
+#=             waypoint = rot_l[val] * waypoint =#
+#=         end =#
+#=     end =#
+#=     sum(map(i -> abs(i), ship)) =#
+#= end =#
+
 println(second(t))
 Test.@test second(t) == 286
 
