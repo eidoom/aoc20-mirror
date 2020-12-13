@@ -39,12 +39,13 @@ Test.@test earliest(t...) == 295
 println(a)
 Test.@test a == 3269
 
-function offsets(data)
-    pairs = filter(p -> p[2] != 0, data)
+function offsets(pairs)
+    shortest = pairs[1][2]
+    buses = [(id - offset, id) for (offset, id) in pairs[2:end]]
     t = 0
     while true
-        t += pairs[1][2]
-        if all(pair -> mod(t, pair[2]) == (pair[2] - pair[1]), pairs[2:end])
+        t += shortest
+        if all(bus -> mod(t, bus[2]) == bus[1], buses)
             return t
         end
     end
