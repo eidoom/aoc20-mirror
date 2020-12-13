@@ -18,6 +18,7 @@ function read_test(name)
 end
 
 function earliest(tar, mul)
+    #= min(m -> div(tar, m[2]), mul) =#
     best = typemax(Int)
     ans = 0
     for (_, m) in mul
@@ -39,18 +40,33 @@ Test.@test earliest(t...) == 295
 println(a)
 Test.@test a == 3269
 
+# brute force (systematic search)
+#= function offsets(pairs) =#
+#=     pairs = sort(pairs, by = i -> i[2]) =#
+#=     shortest = pairs[1][2] =#
+#=     buses = [(id - offset, id) for (offset, id) in pairs[2:end]] =#
+#=     t = 0 =#
+#=     while true =#
+#=         t += shortest =#
+#=         if all(bus -> mod(t, bus[2]) == bus[1], buses) =#
+#=             return t =#
+#=         end =#
+#=     end =#
+#= end =#
+
+# using proof
 function offsets(pairs)
-    shortest = pairs[1][2]
-    buses = [(id - offset, id) for (offset, id) in pairs[2:end]]
-    t = 0
-    while true
-        t += shortest
-        if all(bus -> mod(t, bus[2]) == bus[1], buses)
-            return t
-        end
+    pairs = [(mod(n - ab, n), n) for (ab, n) in pairs]
+    tot = 0
+    N = prod(map(pair -> pair[2], pairs))
+    for (a, n) in pairs
+        inv = div(N, n)
+        tot += a * invmod(inv, n) * inv
     end
+    mod(tot, N)
 end
 
+Test.@test offsets([(0, 3), (1, 4), (1, 5)]) == 39
 Test.@test offsets(t[2]) == 1068781
 
 t5 = read_test("i13t5")
