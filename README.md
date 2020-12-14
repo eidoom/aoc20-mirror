@@ -36,6 +36,8 @@ Sets
 
 DAG, DFS
 
+* Regex
+
 ### 8
 
 "Assembley" interpreter
@@ -59,6 +61,13 @@ Manhattan/taxicab geometry
 Number theory
 
 * [Chinese remainder theorem](https://en.wikipedia.org/wiki/Chinese_remainder_theorem))
-* Easy proof, although not most efficient - two links:
+* Compute using proof construction. Easy proof, although not most efficient - two links:
     * ["Gauss"](https://shainer.github.io/crypto/math/2017/10/22/chinese-remainder-theorem.html)
     * ["Direct construction"](https://en.wikipedia.org/wiki/Chinese_remainder_theorem#Existence_(direct_construction))
+
+### 14
+
+Binary numbers
+
+* Bitmask
+* Bit twiddling

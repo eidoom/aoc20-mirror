@@ -3,10 +3,10 @@ export file_lines
 export file_slurp
 
 function file_lines(name::String)::Array{String,1}
-    a = open(name, "r") do f
+    a::Array{String,1} = open(name, "r") do f
         readlines(f)
     end
-    filter(l -> l != "", a)
+    filter(l::String -> l != "", a)
 end
 
 function file_slurp(name::String)::SubString
