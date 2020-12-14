@@ -75,6 +75,14 @@ function bin2dec(bin)
     dec
 end
 
+function dec2bin(dec)
+    bin = BitArray(undef, 36)
+    for i = 1:36
+        bin[i], dec = divrem(dec, 1 << (36 - i))
+    end
+    map(i -> i ? '1' : '0', bin)
+end
+
 function emulator2(prog)
     mask = ""
     mem = Dict()
@@ -82,7 +90,7 @@ function emulator2(prog)
         if op == "mask"
             mask = val
         else
-            add = "0000" * bitstring(op)
+            add = dec2bin(op)
             res = [(m == '1' || m == 'X') ? m : a for (a, m) in zip(add, mask)]
             arr = []
             all(res, arr)
