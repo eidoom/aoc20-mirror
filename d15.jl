@@ -8,6 +8,7 @@ function read_file(name::String)::Array{Int,1}
     map(i::SubString -> parse(Int, i), split(Com.file_slurp(name), ","))
 end
 
+#= using an array =#
 function game0(spoken::Array{Int,1}, nth::Int)::Int
     while length(spoken) < nth
         index::Union{Int,Nothing} =
@@ -17,12 +18,10 @@ function game0(spoken::Array{Int,1}, nth::Int)::Int
     last(spoken)
 end
 
+#= using a dictionary =#
 function game(spoken::Array{Int,1}, nth::Int)::Int
-    record = Dict{Int,Array{Int,1}}()
+    record = Dict{Int,Array{Int,1}}(s => [i] for (i, s) in enumerate(spoken))
     sizehint!(record, nth)
-    for (i, s) in enumerate(spoken)
-        record[s] = [i]
-    end
     cur = last(spoken)
     for i = (length(spoken) + 1):nth
         cur = length(record[cur]) === 1 ? 0 : i - 1 - popfirst!(record[cur])
@@ -64,6 +63,7 @@ Test.@test a === 755
 println(b)
 Test.@test b === 11962
 
+#= put tests after since they're slow =#
 Test.@test game(t0, two) === 175594
 Test.@test game(t1, two) === 2578
 Test.@test game(t2, two) === 3544142
