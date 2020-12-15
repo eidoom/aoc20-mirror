@@ -10,7 +10,7 @@ end
 
 conv = Dict('N' => [0, 1], 'E' => [1, 0], 'S' => [0, -1], 'W' => [-1, 0])
 
-function first(navs)
+function dist1(navs)
     facing = 'E'
     ship = [0, 0]  # EN
     to_deg = Dict('N' => 0, 'E' => 90, 'S' => 180, 'W' => 270)
@@ -30,14 +30,14 @@ end
 t = read_file("i12t0")
 inp = read_file("i12")
 
-println(first(t))
-Test.@test first(t) == 25
+println(dist1(t))
+Test.@test dist1(t) == 25
 
-@time a = first(inp)
+@time a = dist1(inp)
 println(a)
 Test.@test a == 904
 
-function second(navs)
+function dist2(navs)
     waypoint = [10, 1]  # EN
     ship = [0, 0]  # EN
     for (act, val) in navs
@@ -58,7 +58,7 @@ function second(navs)
 end
 
 #= # slow =#
-#= function second_alt(navs) =#
+#= function dist2_alt(navs) =#
 #=     waypoint = [10, 1]  # EN =#
 #=     ship = [0, 0]  # EN =#
 #=     rot_l = Dict(90 => [0 -1; 1 0], 180 => [-1 0; 0 -1], 270 => [0 1; -1 0])  # L (CCW) =#
@@ -77,9 +77,9 @@ end
 #=     sum(map(i -> abs(i), ship)) =#
 #= end =#
 
-println(second(t))
-Test.@test second(t) == 286
+println(dist2(t))
+Test.@test dist2(t) == 286
 
-@time b = second(inp)
+@time b = dist2(inp)
 println(b)
 Test.@test b == 18747

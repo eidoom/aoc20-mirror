@@ -3,17 +3,17 @@ export file_lines
 export file_slurp
 
 function file_lines(name::String)::Array{String,1}
-    a::Array{String,1} = open(name, "r") do f
-        readlines(f)
+    buf::Array{String,1} = open(name, "r") do file
+        readlines(file)
     end
-    filter(l::String -> l != "", a)
+    filter(line::String -> line != "", buf)
 end
 
 function file_slurp(name::String)::SubString
-    a = open(name, "r") do f
-        read(f, String)
+    buf::String = open(name, "r") do file
+        read(file, String)
     end
-    strip(a)
+    strip(buf)
 end
 
 end

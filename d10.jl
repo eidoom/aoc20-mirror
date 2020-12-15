@@ -9,7 +9,7 @@ function read_file(name)::Array{Int,1}
     sort(map(x -> parse(Int, x), Com.file_lines(name)))
 end
 
-function first(data::Array{Int,1})::Int
+function jolts(data::Array{Int,1})::Int
     one::Int = data[1] === 1 ? 1 : 0
     three::Int = 1 + (data[1] === 3 ? 1 : 0)
     for i::Int = 2:length(data)
@@ -26,14 +26,14 @@ t0 = read_file("i10t0")
 t1 = read_file("i10t1")
 inp = read_file("i10")
 
-Test.@test first(t0) === 35
-Test.@test first(t1) === 220
+Test.@test jolts(t0) === 35
+Test.@test jolts(t1) === 220
 
-@time a = first(inp)
+@time a = jolts(inp)
 println(a)
 Test.@test a === 2312
 
-function second(data::Array{Int,1})::Int
+function arrangements(data::Array{Int,1})::Int
     cache = Dict{Int,Int}(1 => 1, 2 => 2, 3 => 4)
     pushfirst!(data, 0)
     count::Int = 0
@@ -54,9 +54,9 @@ function second(data::Array{Int,1})::Int
     total
 end
 
-Test.@test second(t0) === 8
-Test.@test second(t1) === 19208
+Test.@test arrangements(t0) === 8
+Test.@test arrangements(t1) === 19208
 
-@time b = second(inp)
+@time b = arrangements(inp)
 println(b)
 Test.@test b === 12089663946752

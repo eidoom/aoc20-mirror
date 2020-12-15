@@ -51,7 +51,7 @@ function build(name)
     (mat, keys["shiny gold"])
 end
 
-function first(mat, start)
+function search_up(mat, start)
     #= iterative DFS, traverse graph upwards =#
     visited = fill(false, size(mat, 1))
     stack = [start]
@@ -78,13 +78,13 @@ end
 t0 = build("i07t0")
 @time inp = build("i07")
 
-Test.@test first(t0...) == 4
+Test.@test search_up(t0...) == 4
 
-@time a = first(inp...)
+@time a = search_up(inp...)
 println(a)
 Test.@test a == 185
 
-function second(mat, start)
+function search_down(mat, start)
     #= iterative DFS, traverse graph downwards =#
     stack = [(1, start)]
     tot = 0
@@ -103,11 +103,11 @@ function second(mat, start)
     tot - 1
 end
 
-Test.@test second(t0...) == 32
+Test.@test search_down(t0...) == 32
 
 t1 = build("i07t1")
-Test.@test second(t1...) == 126
+Test.@test search_down(t1...) == 126
 
-@time b = second(inp...)
+@time b = search_down(inp...)
 println(b)
 Test.@test b == 89084

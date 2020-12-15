@@ -8,7 +8,7 @@ function read_file(name)
     map(line -> collect(line), Com.file_lines(name))
 end
 
-function first(data)
+function seats1(data)
     new = deepcopy(data)
     h = length(new)
     w = length(new[1])
@@ -118,9 +118,9 @@ end
 t = read_file("i11t0")
 inp = read_file("i11")
 
-Test.@test first(t) === 37
+Test.@test seats1(t) === 37
 
-@time a = first(inp)
+@time a = seats1(inp)
 println(a)
 Test.@test a === 2126
 
@@ -143,7 +143,7 @@ end
 #=     println() =#
 #= end =#
 
-function second(d)
+function seats2(d)
     new = deepcopy(d)
     h = length(new)
     w = length(new[1])
@@ -171,8 +171,8 @@ function second(d)
     c
 end
 
-Test.@test second(t) === 26
+Test.@test seats2(t) === 26
 
-@time b = second(inp)
+@time b = seats2(inp)
 println(b)
 Test.@test b === 1914

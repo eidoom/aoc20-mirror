@@ -8,27 +8,27 @@ function read_file(name)
     Com.file_lines(name)
 end
 
-function first(data)
+function one(data)
     data
 end
 
 t = read_file("iNNt0")
 inp = read_file("iNN")
 
-println(first(t))
-#= Test.@test first(t) == 0 =#
+println(one(t))
+#= Test.@test one(t) == 0 =#
 
-#= @time a = first(inp) =#
+#= @time a = one(inp) =#
 #= println(a) =#
 #= Test.@test a == 0 =#
 
-#= function second(data) =#
+#= function two(data) =#
 #=     data =#
 #= end =#
 
-#= println(second(t)) =#
-#= Test.@test second(t) == 0 =#
+#= println(two(t)) =#
+#= Test.@test two(t) == 0 =#
 
-#= @time b = second(inp) =#
+#= @time b = two(inp) =#
 #= println(b) =#
 #= Test.@test b == 0 =#

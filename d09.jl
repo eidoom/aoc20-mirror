@@ -8,7 +8,7 @@ function read_file(name)
     map(n -> parse(Int, n), Com.file_lines(name))
 end
 
-function first(data, preamble)
+function weakness1(data, preamble)
     i = 1
     while i + preamble <= length(data)
         sums = []
@@ -27,14 +27,14 @@ end
 t = read_file("i09t0")
 inp = read_file("i09")
 
-ant = first(t, 5)
+ant = weakness1(t, 5)
 Test.@test ant == 127
 
-@time a = first(inp, 25)
+@time a = weakness1(inp, 25)
 println(a)
 Test.@test a == 57195069
 
-function second(data, ans)
+function weakness2(data, ans)
     len = length(data)
     for l = 1:len
         for i = 1:(len - l)
@@ -45,8 +45,8 @@ function second(data, ans)
     end
 end
 
-Test.@test second(t, ant) == 62
+Test.@test weakness2(t, ant) == 62
 
-@time b = second(inp, a)
+@time b = weakness2(inp, a)
 println(b)
 Test.@test b == 7409241
