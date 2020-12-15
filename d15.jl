@@ -60,14 +60,14 @@ Test.@test game(t6, one) === 1836
 println(a)
 Test.@test a === 755
 
-#= Test.@test game(t0, two) === 175594 =#
-#= Test.@test game(t1, two) === 2578 =#
-#= Test.@test game(t2, two) === 3544142 =#
-#= Test.@test game(t3, two) === 261214 =#
-#= Test.@test game(t4, two) === 6895259 =#
-#= Test.@test game(t5, two) === 18 =#
-#= Test.@test game(t6, two) === 362 =#
+@time b = game(inp, two)
+println(b)
+Test.@test b === 11962
 
-#= @time b = game(inp, two) =#
-#= println(b) =#
-#= Test.@test b === 11962 =#
+Test.@test game(t0, two) === 175594
+Test.@test game(t1, two) === 2578
+Test.@test game(t2, two) === 3544142
+Test.@test game(t3, two) === 261214
+Test.@test game(t4, two) === 6895259
+Test.@test game(t5, two) === 18
+Test.@test game(t6, two) === 362
