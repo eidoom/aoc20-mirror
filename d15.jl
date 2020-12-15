@@ -26,7 +26,7 @@ function game(spoken::Array{Int,1}, nth::Int)::Int
     cur = last(spoken)
     for i = (length(spoken) + 1):nth
         index = record[cur][end]
-        cur = length(record[cur]) === 1 ? 0 : i - 1 - record[cur][end - 1]
+        cur = length(record[cur]) === 1 ? 0 : i - 1 - popfirst!(record[cur])
         if haskey(record, cur)
             push!(record[cur], i)
         else
