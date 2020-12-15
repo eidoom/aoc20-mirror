@@ -46,7 +46,7 @@ DAG, DFS
 
 ### 10
 
-Tribonacci sequence
+[Tribonacci sequence](https://oeis.org/A000073)
 
 ### 11
 
@@ -71,3 +71,31 @@ Binary numbers
 
 * Bitmask
 * Bit twiddling
+
+### 15
+
+[Van Eck Sequence](https://oeis.org/A181391)
+
+* You can [prove](https://youtu.be/etMJxB-igrc) this sequence does not evolve to a repeating pattern
+* Array too slow/big? Try a dictionary.
+
+### 16
+
+### 17
+
+### 18
+
+### 19
+
+### 20
+
+### 21
+
+### 22
+
+### 23
+
+### 24
+
+### 25
+

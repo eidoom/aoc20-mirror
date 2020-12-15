@@ -8,13 +8,32 @@ function read_file(name::String)::Array{Int,1}
     map(i::SubString -> parse(Int, i), split(Com.file_slurp(name), ","))
 end
 
-function game(spoken::Array{Int,1}, nth::Int)::Int
+function game0(spoken::Array{Int,1}, nth::Int)::Int
     while length(spoken) < nth
         index::Union{Int,Nothing} =
             findlast(i::Int -> i === last(spoken), spoken[1:(end - 1)])
         push!(spoken, index === nothing ? 0 : length(spoken) - index)
     end
     last(spoken)
+end
+
+function game(spoken::Array{Int,1}, nth::Int)::Int
+    record = Dict{Int,Array{Int,1}}()
+    sizehint!(record, nth)
+    for (i, s) in enumerate(spoken)
+        record[s] = [i]
+    end
+    cur = last(spoken)
+    for i = (length(spoken) + 1):nth
+        index = record[cur][end]
+        cur = length(record[cur]) === 1 ? 0 : i - 1 - record[cur][end - 1]
+        if haskey(record, cur)
+            push!(record[cur], i)
+        else
+            record[cur] = [i]
+        end
+    end
+    cur
 end
 
 one = 2020
@@ -42,8 +61,6 @@ Test.@test game(t6, one) === 1836
 println(a)
 Test.@test a === 755
 
-#= println(game(t0, two)) =#
-
 #= Test.@test game(t0, two) === 175594 =#
 #= Test.@test game(t1, two) === 2578 =#
 #= Test.@test game(t2, two) === 3544142 =#
@@ -54,4 +71,4 @@ Test.@test a === 755
 
 #= @time b = game(inp, two) =#
 #= println(b) =#
-#= Test.@test b === 0 =#
+#= Test.@test b === 11962 =#
