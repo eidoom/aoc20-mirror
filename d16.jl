@@ -1,7 +1,6 @@
 #!/usr/bin/env julia
 
 import Test
-import Combinatorics
 
 include("./com.jl")
 
@@ -48,7 +47,7 @@ function one(data)
 end
 
 t0 = read_file("i16t0")
-t1 = read_file("i16t1")
+#= t1 = read_file("i16t1") =#
 inp = read_file("i16")
 
 Test.@test one(t0) == 71
@@ -57,34 +56,46 @@ Test.@test one(t0) == 71
 println(a)
 Test.@test a == 27911
 
-function ordering(rules, tickets)
-    for perm in Combinatorics.permutations(collect(keys(rules)))
-        ordered = []
-        for col = 1:length(tickets[1])
-            for i = 1:length(perm)
-                if all(
-                    ticket ->
-                        any(low <= ticket[col] <= high for (low, high) in rules[perm[i]]),
-                    tickets,
-                )
-                    push!(ordered, popat!(perm, i))
-                    break
-                end
+function possibilities(rules, tickets)
+    pos = []
+    for col = 1:length(tickets[1])
+        this = []
+        for (name, ranges) in rules
+            if all(
+                ticket -> any(low <= ticket[col] <= high for (low, high) in ranges),
+                tickets,
+            )
+                push!(this, name)
             end
         end
-        if length(perm) === 0
-            return ordered
-        end
+        push!(pos, this)
     end
+    pos
+end
+
+function ordering(pos)
+    order = Array{String}(undef, length(pos))
+    i = 1
+    while any(p -> length(p) != 0, pos)
+        if length(pos[i]) == 1
+            cur = pop!(pos[i])
+            order[i] = cur
+            for p in pos
+                filter!(i -> i != cur, p)
+            end
+        end
+        i = mod(i + 1, 1:length(pos))
+    end
+    order
 end
 
 function two(data)
     rules, yours, nearby = data
     valid = filter(ticket -> all(n -> check_valid(rules, n), ticket), nearby)
-    order = ordering(rules, valid)
-    println(collect(zip(order, yours)))
+    pos = possibilities(rules, valid)
+    unique = ordering(pos)
     res = 1
-    for (field, num) in zip(order, yours)
+    for (field, num) in zip(unique, yours)
         if contains(field, "departure")
             res *= num
         end
@@ -92,8 +103,8 @@ function two(data)
     res
 end
 
-@time two(t1)
+#= @time two(t1) =#
 
-#= @time b = two(inp) =#
-#= println(b) =#
-#= Test.@test b == 0 =#
+@time b = two(inp)
+println(b)
+Test.@test b == 737176602479
