@@ -1,19 +1,20 @@
 #!/usr/bin/env julia
 
 import Test
+import Combinatorics
 
 include("./com.jl")
 
 function read_rules(data)
-    rules = []
+    rules = Dict()
     for d in data
-        m = match(r"^\w+: (\d+)-(\d+) or (\d+)-(\d+)$", d)
+        m = match(r"^([\w ]+): (\d+)-(\d+) or (\d+)-(\d+)$", d)
         if m !== nothing
             this = map(
                 j -> map(i -> parse(Int, i), map(k -> m.captures[j + k], (0, 1))),
-                (1, 3),
+                (2, 4),
             )
-            push!(rules, this)
+            rules[m.captures[1]] = this
         end
     end
     rules
@@ -25,16 +26,16 @@ end
 
 function read_file(name)
     rules, yours, nearby = map(sec -> split(sec, '\n'), split(Com.file_slurp(name), "\n\n"))
-    read_rules(rules), read_tickets(nearby)
+    read_rules(rules), first(read_tickets(yours)), read_tickets(nearby)
 end
 
 function check_valid(rules, n)
-    any(rule -> any((low <= n <= high) for (low, high) in rule), rules)
+    any(rule -> any((low <= n <= high) for (low, high) in rule), values(rules))
 
 end
 
 function one(data)
-    rules, nearby = data
+    rules, _, nearby = data
     invalid = 0
     for ticket in nearby
         for n in ticket
@@ -56,12 +57,35 @@ Test.@test one(t0) == 71
 println(a)
 Test.@test a == 27911
 
-function two(data)
-    data
+function ordering(rules, tickets)
+    for order in Combinatorics.permutations(collect(keys(rules)))
+        if all(
+            ticket -> all(
+                any(low <= num <= high for (low, high) in rules[name])
+                for (num, name) in zip(ticket, order)
+            ),
+            tickets,
+        )
+            return order
+        end
+    end
 end
 
-println(two(t0))
-#= Test.@test two(t0) == 0 =#
+function two(data)
+    rules, yours, nearby = data
+    valid = filter(ticket -> all(n -> check_valid(rules, n), ticket), nearby)
+    order = ordering(rules, valid)
+    println(collect(zip(order, yours)))
+    res = 1
+    for (field, num) in zip(order, yours)
+        if contains(field, "departure")
+            res *= num
+        end
+    end
+    res
+end
+
+@time println(two(t1))
 
 #= @time b = two(inp) =#
 #= println(b) =#
