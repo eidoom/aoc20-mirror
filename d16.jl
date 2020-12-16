@@ -58,15 +58,22 @@ println(a)
 Test.@test a == 27911
 
 function ordering(rules, tickets)
-    for order in Combinatorics.permutations(collect(keys(rules)))
-        if all(
-            ticket -> all(
-                any(low <= num <= high for (low, high) in rules[name])
-                for (num, name) in zip(ticket, order)
-            ),
-            tickets,
-        )
-            return order
+    for perm in Combinatorics.permutations(collect(keys(rules)))
+        ordered = []
+        for col = 1:length(tickets[1])
+            for i = 1:length(perm)
+                if all(
+                    ticket ->
+                        any(low <= ticket[col] <= high for (low, high) in rules[perm[i]]),
+                    tickets,
+                )
+                    push!(ordered, popat!(perm, i))
+                    break
+                end
+            end
+        end
+        if length(perm) === 0
+            return ordered
         end
     end
 end
@@ -85,7 +92,7 @@ function two(data)
     res
 end
 
-@time println(two(t1))
+@time two(t1)
 
 #= @time b = two(inp) =#
 #= println(b) =#
