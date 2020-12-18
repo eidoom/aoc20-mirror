@@ -39,12 +39,7 @@ end
 
 function arithmetic(line)
     while length(line) > 1
-        if line[2] === plus
-            new = line[1] + line[3]
-        else
-            new = line[1] * line[3]
-        end
-        line = vcat([new], line[4:end])
+        line = vcat([line[2] === plus ? line[1] + line[3] : line[1] * line[3]], line[4:end])
     end
     line[1]
 end
@@ -89,10 +84,8 @@ function arithmetic2(line)
         i = findfirst(c -> c === plus, line)
         if i === nothing
             return reduce(*, line[1:2:end])
-        else
-            new = line[i - 1] + line[i + 1]
         end
-        line = vcat(line[1:(i - 2)], [new], line[(i + 2):end])
+        line = vcat(line[1:(i - 2)], [line[i - 1] + line[i + 1]], line[(i + 2):end])
     end
     line[1]
 end
