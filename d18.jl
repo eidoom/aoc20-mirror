@@ -18,13 +18,13 @@ function read_file(name)
             elseif i[1] === '*'
                 push!(line, times)
             elseif i[1] === '('
-                br = findlast(i -> i === '(', i)
+                br = findlast(c -> c === '(', i)
                 for _ = 1:br
                     push!(line, left)
                 end
                 push!(line, parse(Int, i[(br + 1):end]))
             elseif i[end] === ')'
-                br = findfirst(i -> i === ')', i)
+                br = findfirst(c -> c === ')', i)
                 push!(line, parse(Int, i[1:(br - 1)]))
                 for _ = br:length(i)
                     push!(line, right)
