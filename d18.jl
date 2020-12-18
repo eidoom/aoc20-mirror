@@ -46,13 +46,13 @@ end
 
 function brackets(line, maths)
     check = findfirst(i -> i === left, line)
-    if check === nothing
+    if check !== nothing
+        line = vcat(line[1:(check - 1)], brackets(line[(check + 1):end], maths))
+        brackets(line, maths)
+    else
         finish = findfirst(i -> i === right, line[1:end])
         new = maths(line[1:(finish - 1)])
         vcat([new], line[(finish + 1):end])
-    else
-        line = vcat(line[1:(check - 1)], brackets(line[(check + 1):end], maths))
-        brackets(line, maths)
     end
 end
 
@@ -71,7 +71,7 @@ function one(data)
 end
 
 t = read_file("i18t0")
-@time inp = read_file("i18")
+inp = read_file("i18")
 
 Test.@test one(t) === 26457
 
