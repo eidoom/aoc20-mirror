@@ -37,7 +37,7 @@ function fib(n::Int, table::Vector{Int} = [0, 1])::Int
         resize!(table, n)
     end
     for i = (m + 1):n
-        table[i] = table[i - 1] + table[i - 2]
+        table[i] = sum(j -> table[i - j], 1:2)
     end
     table[n]
 end
@@ -70,15 +70,9 @@ function trib(n::Int, table::Vector{Int} = [0, 0, 1])::Int
         resize!(table, n)
     end
     for i = (m + 1):n
-        table[i] = table[i - 1] + table[i - 2] + table[i - 3]
+        table[i] = sum(j -> table[i - j], 1:3)
     end
     table[n]
-end
-
-#= for day 10 =#
-function trib4(n::Int, cache::Vector{Int} = [1, 2, 4])::Int
-    #= 1, 2, 4, 7, 13, 24, ... =#
-    trib(n, cache)
 end
 
 #= ---------------------------------------------------------------- =#
@@ -110,5 +104,16 @@ end
 #= ---------------------------------------------------------------- =#
 
 #= ================================================================ =#
+
+function n_nacci(N::Int, n::Int, table::Vector{Int})::Int
+    m = length(table)
+    if m < n
+        resize!(table, n)
+    end
+    for i = (m + 1):n
+        table[i] = sum(j -> table[i - j], 1:N)
+    end
+    table[n]
+end
 
 end
