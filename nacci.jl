@@ -10,37 +10,79 @@ export trib4
 #= set the cache to change the start of the sequence =#
 #= share the cache between multiple calls for maximum performance =#
 
+#= ================================================================ =#
+#= Fibonacci sequence =#
+#= https://oeis.org/A000045 =#
 #= https://en.wikipedia.org/wiki/Fibonacci_number =#
-function fib(n::Int, cache = Dict{Int,Int}(1 => 0, 2 => 1))::Int
+
+#= memoized recursive - slower than iterative =#
+#= function fib(n::Int, memo = Dict{Int,Int}(1 => 0, 2 => 1))::Int =#
+#=     #1= 0, 1, 1, 2, 3, 5, ... =1# =#
+#=     if n < 3 =#
+#=         return memo[n] =#
+#=     end =#
+#=     for m in (n - 1, n - 2) =#
+#=         if !haskey(memo, m) =#
+#=             memo[m] = fib(m, memo) =#
+#=         end =#
+#=     end =#
+#=     memo[n - 1] + memo[n - 2] =#
+#= end =#
+
+#= tabulated iterative - fastest =#
+function fib(n::Int, table::Vector{Int} = [0, 1])::Int
     #= 0, 1, 1, 2, 3, 5, ... =#
-    if n < 3
-        cache[n]
-    else
-        for m in (n - 1, n - 2)
-            if !haskey(cache, m)
-                cache[m] = fib(m, cache)
-            end
-        end
-        cache[n - 1] + cache[n - 2]
+    m = length(table)
+    if m < n
+        resize!(table, n)
     end
+    for i = (m + 1):n
+        table[i] = table[i - 1] + table[i - 2]
+    end
+    table[n]
 end
 
+#= ================================================================ =#
+#= Tribonacci sequence =#
+#= https://oeis.org/A000073 =#
 #= https://en.wikipedia.org/wiki/Generalizations_of_Fibonacci_numbers#Tribonacci_numbers =#
-function trib(n::Int, cache = Dict{Int,Int}(1 => 0, 2 => 0, 3 => 1))::Int
+
+#= memoized recursive - slower than iterative =#
+#= function trib(n::Int, memo::Dict{Int,Int} = Dict(1 => 0, 2 => 0, 3 => 1))::Int =#
+#=     #1= 0, 0, 1, 1, 2, 4, ... =1# =#
+#=     if n < 4 =#
+#=         memo[n] =#
+#=     else =#
+#=         for m = (n - 3):(n - 1) =#
+#=             if !haskey(memo, m) =#
+#=                 memo[m] = trib(m, memo) =#
+#=             end =#
+#=         end =#
+#=         memo[n - 1] + memo[n - 2] + memo[n - 3] =#
+#=     end =#
+#= end =#
+
+#= tabulated iterative - fastest =#
+function trib(n::Int, table::Vector{Int} = [0, 0, 1])::Int
     #= 0, 0, 1, 1, 2, 4, ... =#
-    if n < 4
-        cache[n]
-    else
-        for m = (n - 3):(n - 1)
-            if !haskey(cache, m)
-                cache[m] = trib(m, cache)
-            end
-        end
-        cache[n - 1] + cache[n - 2] + cache[n - 3]
+    m = length(table)
+    if m < n
+        resize!(table, n)
     end
+    for i = (m + 1):n
+        table[i] = table[i - 1] + table[i - 2] + table[i - 3]
+    end
+    table[n]
+end
+
+#= for day 10 =#
+function trib4(n::Int, cache::Vector{Int} = [1, 2, 4])::Int
+    #= 1, 2, 4, 7, 13, 24, ... =#
+    trib(n, cache)
 end
 
 #= ---------------------------------------------------------------- =#
+#= analytical expression =#
 #= From https://en.wikipedia.org/wiki/Generalizations_of_Fibonacci_numbers#Tribonacci_numbers =#
 #= which is compact version of: https://vixra.org/pdf/1410.0054v6.pdf Formula 2 =#
 #= In Julia, holds for 1 <= n <= 58. Works after in Mathematica, why breaks in Julia? Types? =#
@@ -67,10 +109,6 @@ end
 
 #= ---------------------------------------------------------------- =#
 
-#= for day 10 =#
-function trib4(n::Int, cache = Dict{Int,Int}(1 => 1, 2 => 2, 3 => 4))::Int
-    #= 1, 2, 4, 7, 13, 24, ... =#
-    trib(n, cache)
-end
+#= ================================================================ =#
 
 end

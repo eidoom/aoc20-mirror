@@ -12,7 +12,6 @@ Test.@test Nacci.trib(38) == 1132436852
 #= Test.@test Nacci.trib_alt(38) == 1132436852 =#
 
 #= a = 58 =#
-#= @time println(Nacci.fib(a)) =#
 #= @time println(Nacci.trib(a)) =#
 #= @time println(Nacci.trib_alt(a)) =#
 
@@ -36,3 +35,7 @@ Test.@test Nacci.trib(38) == 1132436852
 
 #= @time rec() =#
 #= @time frm() =#
+
+#= c = 80 =#
+#= @time println(Nacci.fib(c)) =#
+#= @time println(Nacci.trib(c)) =#

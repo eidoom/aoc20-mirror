@@ -34,7 +34,7 @@ println(a)
 Test.@test a === 2312
 
 function arrangements(data::Array{Int,1})::Int
-    cache = Dict{Int,Int}(1 => 1, 2 => 2, 3 => 4)
+    cache::Vector{Int} = [1, 2, 4]
     pushfirst!(data, 0)
     count::Int = 0
     total::Int = 1
