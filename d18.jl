@@ -4,8 +4,10 @@ import Test
 
 include("./com.jl")
 
-@enum Sym plus = 1 times = 2 left = 3 right = 4
+#= represent the different symbols ['+', '*', '(', ')'] as enums =#
+@enum Sym plus times left right
 
+#= turn strings into arrays of Int and Sym =#
 function read_file(name)
     data = Com.file_lines(name)
     lines = []
@@ -37,6 +39,7 @@ function read_file(name)
     lines
 end
 
+#= pure left-to-right operator precedence =#
 function arithmetic(line)
     while length(line) > 1
         line = vcat([line[2] === plus ? line[1] + line[3] : line[1] * line[3]], line[4:end])
@@ -44,6 +47,7 @@ function arithmetic(line)
     line
 end
 
+#= "recursive descent parser" for parentheses =#
 function brackets(line, maths)
     check = findfirst(i -> i === left, line)
     if check !== nothing
@@ -59,6 +63,7 @@ function brackets(line, maths)
     end
 end
 
+#= sum of result of each expression =#
 function evaluate(data, maths)
     sum(line -> brackets(line, maths)[1], data)
 end
@@ -72,6 +77,7 @@ Test.@test evaluate(t, arithmetic) === 26457
 println(a)
 Test.@test a === 280014646144
 
+#= addition has higher operation precedence than multiplication =#
 function arithmetic2(line)
     while length(line) > 1
         i = findfirst(c -> c === plus, line)
