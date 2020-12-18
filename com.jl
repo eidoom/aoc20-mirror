@@ -3,7 +3,7 @@ export file_lines
 export file_slurp
 
 function file_lines(name::String)::Vector{String}
-    buf::Array{String,1} = open(name, "r") do file
+    buf::Vector{String} = open(name, "r") do file
         readlines(file)
     end
     filter(line::String -> line != "", buf)
