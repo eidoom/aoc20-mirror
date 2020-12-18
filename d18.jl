@@ -44,15 +44,15 @@ function arithmetic(line)
     line[1]
 end
 
-function brackets(line)
+function brackets(line, maths)
     check = findfirst(i -> i === left, line)
     if check === nothing
         finish = findfirst(i -> i === right, line[1:end])
-        new = arithmetic(line[1:(finish - 1)])
+        new = maths(line[1:(finish - 1)])
         vcat([new], line[(finish + 1):end])
     else
-        line = vcat(line[1:(check - 1)], brackets(line[(check + 1):end]))
-        brackets(line)
+        line = vcat(line[1:(check - 1)], brackets(line[(check + 1):end], maths))
+        brackets(line, maths)
     end
 end
 
@@ -63,7 +63,7 @@ function one(data)
         if start === nothing
             tot += arithmetic(line)
         else
-            new = brackets(line[(start + 1):end])
+            new = brackets(line[(start + 1):end], arithmetic)
             tot += arithmetic(vcat(line[1:(start - 1)], new))
         end
     end
@@ -71,7 +71,7 @@ function one(data)
 end
 
 t = read_file("i18t0")
-inp = read_file("i18")
+@time inp = read_file("i18")
 
 Test.@test one(t) === 26457
 
@@ -90,18 +90,6 @@ function arithmetic2(line)
     line[1]
 end
 
-function brackets2(line)
-    check = findfirst(i -> i === left, line)
-    if check === nothing
-        finish = findfirst(i -> i === right, line[1:end])
-        new = arithmetic2(line[1:(finish - 1)])
-        vcat([new], line[(finish + 1):end])
-    else
-        line = vcat(line[1:(check - 1)], brackets2(line[(check + 1):end]))
-        brackets2(line)
-    end
-end
-
 function two(data)
     tot = 0
     for line in data
@@ -109,7 +97,7 @@ function two(data)
         if start === nothing
             tot += arithmetic2(line)
         else
-            new = brackets2(line[(start + 1):end])
+            new = brackets(line[(start + 1):end], arithmetic2)
             tot += arithmetic2(vcat(line[1:(start - 1)], new))
         end
     end
