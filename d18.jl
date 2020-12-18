@@ -88,7 +88,7 @@ function arithmetic2(line)
     while length(line) > 1
         i = findfirst(c -> c === plus, line)
         if i === nothing
-            return arithmetic(line)
+            return reduce(*, line[1:2:end])
         else
             new = line[i - 1] + line[i + 1]
         end
