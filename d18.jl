@@ -51,30 +51,24 @@ function brackets(line, maths)
         brackets(line, maths)
     else
         finish = findfirst(i -> i === right, line[1:end])
-        vcat(maths(line[1:(finish - 1)]), line[(finish + 1):end])
+        if finish !== nothing
+            vcat(maths(line[1:(finish - 1)]), line[(finish + 1):end])
+        else
+            vcat(maths(line))
+        end
     end
 end
 
-function one(data)
-    tot = 0
-    for line in data
-        start = findfirst(i -> i === left, line)
-        if start === nothing
-            tot += arithmetic(line)[1]
-        else
-            new = brackets(line[(start + 1):end], arithmetic)
-            tot += arithmetic(vcat(line[1:(start - 1)], new))[1]
-        end
-    end
-    tot
+function evaluate(data, maths)
+    sum(line -> brackets(line, maths)[1], data)
 end
 
 t = read_file("i18t0")
 inp = read_file("i18")
 
-Test.@test one(t) === 26457
+Test.@test evaluate(t, arithmetic) === 26457
 
-@time a = one(inp)
+@time a = evaluate(inp, arithmetic)
 println(a)
 Test.@test a === 280014646144
 
@@ -89,22 +83,8 @@ function arithmetic2(line)
     line
 end
 
-function two(data)
-    tot = 0
-    for line in data
-        start = findfirst(i -> i === left, line)
-        if start === nothing
-            tot += arithmetic2(line)[1]
-        else
-            new = brackets(line[(start + 1):end], arithmetic2)
-            tot += arithmetic2(vcat(line[1:(start - 1)], new))[1]
-        end
-    end
-    tot
-end
+Test.@test evaluate(t, arithmetic2) === 694173
 
-Test.@test two(t) === 694173
-
-@time b = two(inp)
+@time b = evaluate(inp, arithmetic2)
 println(b)
 Test.@test b === 9966990988262
