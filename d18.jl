@@ -4,6 +4,9 @@ import Test
 
 include("./com.jl")
 
+#= TODO replace symbols with enums =#
+#= @enum Sym plus=1 times=2 left=3 right=4 =#
+
 function read_file(name)
     data = Com.file_lines(name)
     lines = []
