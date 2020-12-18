@@ -16,7 +16,7 @@ Warm up
 
 ### 2
 
-Strict parser
+Strict [parser](https://en.wikipedia.org/wiki/Parsing#Computer_languages)
 
 ### 3
 
@@ -26,21 +26,21 @@ Strict parser
 
 ### 5
 
-Binary space partitioning
+[Binary space partitioning](https://en.wikipedia.org/wiki/Binary_space_partitioning)
 
 ### 6
 
-Sets
+[Sets](https://en.wikipedia.org/wiki/Set_(abstract_data_type))
 
 ### 7
 
-DAG, DFS
+[DAG](https://en.wikipedia.org/wiki/Directed_acyclic_graph), [DFS](https://en.wikipedia.org/wiki/Depth-first_search)
 
-* Regex
+* [Regex](https://en.wikipedia.org/wiki/Regular_expression)
 
 ### 8
 
-"Assembley" interpreter
+"Assembley" [interpreter](https://en.wikipedia.org/wiki/Interpreter_(computing))
 
 ### 9
 
@@ -50,11 +50,11 @@ DAG, DFS
 
 ### 11
 
-Cellular automaton with steady state
+[Cellular automaton](https://en.wikipedia.org/wiki/Cellular_automaton) with steady state
 
 ### 12
 
-Manhattan/taxicab geometry
+[Manhattan/taxicab geometry](https://en.wikipedia.org/wiki/Taxicab_geometry)
 
 ### 13
 
@@ -77,13 +77,23 @@ Binary numbers
 [Van Eck Sequence](https://oeis.org/A181391)
 
 * You can [prove](https://youtu.be/etMJxB-igrc) this sequence does not evolve to a repeating pattern
-* Array too slow/big? Try a dictionary.
+* Array too slow/big? Try a [dictionary](https://en.wikipedia.org/wiki/Associative_array).
 
 ### 16
 
+The naivest brute force is factorial time, so you have to think of a moderately more clever algorithm.
+
 ### 17
 
+Cellular automata: B3/S23 (Conway's Game of Life) in 3 and 4 dimensions
+
+* Implemented this one with [hash](https://en.wikipedia.org/wiki/Hash_table) sets for a change
+
 ### 18
+
+[Recursive decent parser](https://en.wikipedia.org/wiki/Recursive_descent_parser) for ficticious arithmetic
+
+* Consider [shunting-yard algorithm](https://en.wikipedia.org/wiki/Shunting-yard_algorithm)
 
 ### 19
 
