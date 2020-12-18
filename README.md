@@ -94,6 +94,9 @@ Cellular automata: B3/S23 (Conway's Game of Life) in 3 and 4 dimensions
 [Recursive decent parser](https://en.wikipedia.org/wiki/Recursive_descent_parser) for ficticious arithmetic
 
 * Consider [shunting-yard algorithm](https://en.wikipedia.org/wiki/Shunting-yard_algorithm)
+* Type annotations (`@time` part two)
+    * Before `0.002661 seconds (32.86 k allocations: 2.790 MiB)`
+    * After `0.001234 seconds (20.84 k allocations: 2.629 MiB)`
 
 ### 19
 
