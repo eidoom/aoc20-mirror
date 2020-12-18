@@ -5,41 +5,11 @@ import Test
 include("./com.jl")
 
 function read_file(name)
-    Com.file_lines(name)
-end
-
-function arithmetic(line)
-    while length(line) > 1
-        if line[2]
-            new = line[1] + line[3]
-        else
-            new = line[1] * line[3]
-        end
-        line = vcat([new], line[4:end])
-    end
-    line[1]
-end
-
-function brackets(line)
-    #= println(line) =#
-    check = findfirst(isequal('('), line)
-    if check == nothing
-        finish = findfirst(isequal(')'), line[1:end])
-        new = arithmetic(line[1:(finish - 1)])
-        vcat([new], line[(finish + 1):end])
-    else
-        line = vcat(line[1:(check - 1)], brackets(line[(check + 1):end]))
-        brackets(line)
-    end
-end
-
-function one(data)
-    tot = 0
+    data = Com.file_lines(name)
+    lines = []
     for datum in data
-        #= println(datum) =#
         line = []
         for i in split(datum)
-            #= println(i) =#
             if i == "+"
                 push!(line, true)
             elseif i == "*"
@@ -60,7 +30,38 @@ function one(data)
                 push!(line, parse(Int, i))
             end
         end
-        #= println(line) =#
+        push!(lines, line)
+    end
+    lines
+end
+
+function arithmetic(line)
+    while length(line) > 1
+        if line[2]
+            new = line[1] + line[3]
+        else
+            new = line[1] * line[3]
+        end
+        line = vcat([new], line[4:end])
+    end
+    line[1]
+end
+
+function brackets(line)
+    check = findfirst(isequal('('), line)
+    if check == nothing
+        finish = findfirst(isequal(')'), line[1:end])
+        new = arithmetic(line[1:(finish - 1)])
+        vcat([new], line[(finish + 1):end])
+    else
+        line = vcat(line[1:(check - 1)], brackets(line[(check + 1):end]))
+        brackets(line)
+    end
+end
+
+function one(data)
+    tot = 0
+    for line in data
         start = findfirst(isequal('('), line)
         if start == nothing
             tot += arithmetic(line)
@@ -75,20 +76,53 @@ end
 t = read_file("i18t0")
 inp = read_file("i18")
 
-println(one(t))
-Test.@test one(t) == 26406
+Test.@test one(t) == 26457
 
 @time a = one(inp)
 println(a)
-#= Test.@test a == 0 =#
+Test.@test a == 280014646144
 
-#= function two(data) =#
-#=     data =#
-#= end =#
+function arithmetic2(line)
+    while length(line) > 1
+        i = findfirst(i -> i === true, line)  # first +
+        if i == nothing
+            return arithmetic(line)
+        else
+            new = line[i - 1] + line[i + 1]
+        end
+        line = vcat(line[1:(i - 2)], [new], line[(i + 2):end])
+    end
+    line[1]
+end
 
-#= println(two(t)) =#
-#= Test.@test two(t) == 0 =#
+function brackets2(line)
+    check = findfirst(isequal('('), line)
+    if check == nothing
+        finish = findfirst(isequal(')'), line[1:end])
+        new = arithmetic2(line[1:(finish - 1)])
+        vcat([new], line[(finish + 1):end])
+    else
+        line = vcat(line[1:(check - 1)], brackets2(line[(check + 1):end]))
+        brackets2(line)
+    end
+end
 
-#= @time b = two(inp) =#
-#= println(b) =#
-#= Test.@test b == 0 =#
+function two(data)
+    tot = 0
+    for line in data
+        start = findfirst(isequal('('), line)
+        if start == nothing
+            tot += arithmetic2(line)
+        else
+            new = brackets2(line[(start + 1):end])
+            tot += arithmetic2(vcat(line[1:(start - 1)], new))
+        end
+    end
+    tot
+end
+
+Test.@test two(t) == 694173
+
+@time b = two(inp)
+println(b)
+Test.@test b == 9966990988262
