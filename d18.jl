@@ -41,7 +41,7 @@ function arithmetic(line)
     while length(line) > 1
         line = vcat([line[2] === plus ? line[1] + line[3] : line[1] * line[3]], line[4:end])
     end
-    line[1]
+    line
 end
 
 function brackets(line, maths)
@@ -51,8 +51,7 @@ function brackets(line, maths)
         brackets(line, maths)
     else
         finish = findfirst(i -> i === right, line[1:end])
-        new = maths(line[1:(finish - 1)])
-        vcat([new], line[(finish + 1):end])
+        vcat(maths(line[1:(finish - 1)]), line[(finish + 1):end])
     end
 end
 
@@ -61,10 +60,10 @@ function one(data)
     for line in data
         start = findfirst(i -> i === left, line)
         if start === nothing
-            tot += arithmetic(line)
+            tot += arithmetic(line)[1]
         else
             new = brackets(line[(start + 1):end], arithmetic)
-            tot += arithmetic(vcat(line[1:(start - 1)], new))
+            tot += arithmetic(vcat(line[1:(start - 1)], new))[1]
         end
     end
     tot
@@ -87,7 +86,7 @@ function arithmetic2(line)
         end
         line = vcat(line[1:(i - 2)], [line[i - 1] + line[i + 1]], line[(i + 2):end])
     end
-    line[1]
+    line
 end
 
 function two(data)
@@ -95,10 +94,10 @@ function two(data)
     for line in data
         start = findfirst(i -> i === left, line)
         if start === nothing
-            tot += arithmetic2(line)
+            tot += arithmetic2(line)[1]
         else
             new = brackets(line[(start + 1):end], arithmetic2)
-            tot += arithmetic2(vcat(line[1:(start - 1)], new))
+            tot += arithmetic2(vcat(line[1:(start - 1)], new))[1]
         end
     end
     tot
