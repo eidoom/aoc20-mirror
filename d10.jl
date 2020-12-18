@@ -43,13 +43,13 @@ function arrangements(data::Array{Int,1})::Int
             count += 1
         else
             if count > 1
-                total *= Nacci.trib(count, cache)
+                total *= Nacci.n_nacci(3, count, cache)
             end
             count = 0
         end
     end
     if count > 1
-        total *= Nacci.trib(count, cache)
+        total *= Nacci.n_nacci(3, count, cache)
     end
     total
 end
