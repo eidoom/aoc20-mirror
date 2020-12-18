@@ -9,14 +9,13 @@ include("./com.jl")
 
 #= turn strings into arrays of Int and Sym =#
 function read_file(name)
-    data = Com.file_lines(name)
     lines = []
-    for datum in data
+    for expr in Com.file_lines(name)
         line = []
-        for i in split(datum)
-            if i == "+"
+        for i in split(expr)
+            if i[1] === '+'
                 push!(line, plus)
-            elseif i == "*"
+            elseif i[1] === '*'
                 push!(line, times)
             elseif i[1] === '('
                 br = findlast(i -> i === '(', i)
@@ -51,8 +50,7 @@ end
 function brackets(line, maths)
     check = findfirst(i -> i === left, line)
     if check !== nothing
-        line = vcat(line[1:(check - 1)], brackets(line[(check + 1):end], maths))
-        brackets(line, maths)
+        brackets(vcat(line[1:(check - 1)], brackets(line[(check + 1):end], maths)), maths)
     else
         finish = findfirst(i -> i === right, line[1:end])
         if finish !== nothing
@@ -69,7 +67,7 @@ function evaluate(data, maths)
 end
 
 t = read_file("i18t0")
-inp = read_file("i18")
+@time inp = read_file("i18")
 
 Test.@test evaluate(t, arithmetic) === 26457
 
