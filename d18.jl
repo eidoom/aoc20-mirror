@@ -17,13 +17,13 @@ function read_file(name)
             elseif i == "*"
                 push!(line, times)
             elseif i[1] === '('
-                br = findlast(isequal('('), i)
+                br = findlast(i -> i === '(', i)
                 for _ = 1:br
                     push!(line, left)
                 end
                 push!(line, parse(Int, i[(br + 1):end]))
             elseif i[end] === ')'
-                br = findfirst(isequal(')'), i)
+                br = findfirst(i -> i === ')', i)
                 push!(line, parse(Int, i[1:(br - 1)]))
                 for _ = br:length(i)
                     push!(line, right)
@@ -50,9 +50,9 @@ function arithmetic(line)
 end
 
 function brackets(line)
-    check = findfirst(isequal(left), line)
+    check = findfirst(i -> i === left, line)
     if check === nothing
-        finish = findfirst(isequal(right), line[1:end])
+        finish = findfirst(i -> i === right, line[1:end])
         new = arithmetic(line[1:(finish - 1)])
         vcat([new], line[(finish + 1):end])
     else
@@ -64,7 +64,7 @@ end
 function one(data)
     tot = 0
     for line in data
-        start = findfirst(isequal(left), line)
+        start = findfirst(i -> i === left, line)
         if start === nothing
             tot += arithmetic(line)
         else
@@ -86,8 +86,8 @@ Test.@test a === 280014646144
 
 function arithmetic2(line)
     while length(line) > 1
-        i = findfirst(i -> i === plus, line)
-        if i == nothing
+        i = findfirst(c -> c === plus, line)
+        if i === nothing
             return arithmetic(line)
         else
             new = line[i - 1] + line[i + 1]
@@ -98,9 +98,9 @@ function arithmetic2(line)
 end
 
 function brackets2(line)
-    check = findfirst(isequal(left), line)
+    check = findfirst(i -> i === left, line)
     if check === nothing
-        finish = findfirst(isequal(right), line[1:end])
+        finish = findfirst(i -> i === right, line[1:end])
         new = arithmetic2(line[1:(finish - 1)])
         vcat([new], line[(finish + 1):end])
     else
@@ -112,7 +112,7 @@ end
 function two(data)
     tot = 0
     for line in data
-        start = findfirst(isequal(left), line)
+        start = findfirst(i -> i === left, line)
         if start === nothing
             tot += arithmetic2(line)
         else
