@@ -39,6 +39,7 @@ function read_file(name::String)::Vector{Vector{Union{Sym,Int}}}
 end
 
 #= pure left-to-right operator precedence =#
+#= it's faster to return an array here than an Int =#
 function arithmetic(line::Vector{Union{Sym,Int}})::Vector{Union{Int,Sym}}
     while length(line) > 1
         line::Vector{Union{Sym,Int}} =
@@ -78,6 +79,7 @@ println(a)
 Test.@test a === 280014646144
 
 #= addition has higher operation precedence than multiplication =#
+#= it would be faster to return an Int here, but then part 1 would be slowed down more than the gain in part 2 =#
 function arithmetic2(line::Vector{Union{Sym,Int}})::Vector{Union{Int,Sym}}
     while length(line) > 1
         i::Union{Nothing,Int} = findfirst(c::Union{Sym,Int} -> c === plus, line)
