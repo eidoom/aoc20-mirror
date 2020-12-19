@@ -31,26 +31,20 @@ function builder(rules, i)
         if length(rule) == 1
             builder(rules, rule[1])
         elseif length(rule) == 2
-            as = []
             a1 = builder(rules, rule[1])
             a2 = builder(rules, rule[2])
-            for i in a1
-                for j in a2
-                    push!(as, i * j)
-                end
+            as = []
+            for i in a1, j in a2
+                push!(as, i * j)
             end
             as
         else
-            as = []
             a1 = builder(rules, rule[1])
             a2 = builder(rules, rule[2])
             a3 = builder(rules, rule[3])
-            for i in a1
-                for j in a2
-                    for k in a3
-                        push!(as, i * j * k)
-                    end
-                end
+            as = []
+            for i in a1, j in a2, k in a3
+                push!(as, i * j * k)
             end
             as
         end
@@ -58,16 +52,12 @@ function builder(rules, i)
         as = []
         for set in rule
             if length(set) == 1
-                p0 = set[1]
-                a0 = builder(rules, p0)
-                push!(as, a0)
+                push!(as, builder(rules, set[1]))
             else
                 a1 = builder(rules, set[1])
                 a2 = builder(rules, set[2])
-                for i in a1
-                    for j in a2
-                        push!(as, i * j)
-                    end
+                for i in a1, j in a2
+                    push!(as, i * j)
                 end
             end
         end
