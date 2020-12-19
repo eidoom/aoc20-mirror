@@ -14,7 +14,7 @@ function read_file(name)
             resize!(rules, ii)
         end
         r = m.captures[2]
-        if r[1] == '"'
+        if r[1] === '"'
             rules[ii] = r[2]
         else
             r = map(i -> map(j -> parse(Int, j) + 1, split(i, " ")), split(r, " | "))
@@ -29,11 +29,11 @@ function builder(rules, i)
 
     if isa(rule, Char)
         rule
-    elseif length(rule) == 1
+    elseif length(rule) === 1
         rule = rule[1]
-        if length(rule) == 1
+        if length(rule) === 1
             builder(rules, rule[1])
-        elseif length(rule) == 2
+        elseif length(rule) === 2
             a1 = builder(rules, rule[1])
             a2 = builder(rules, rule[2])
             as = []
@@ -54,7 +54,7 @@ function builder(rules, i)
     else
         as = []
         for set in rule
-            if length(set) == 1
+            if length(set) === 1
                 push!(as, builder(rules, set[1]))
             else
                 a1 = builder(rules, set[1])
@@ -78,18 +78,24 @@ end
 t1 = read_file("i19t1")
 r1, m1 = read_file("i19")
 
-Test.@test one(t1...) == 2
+Test.@test one(t1...) === 2
 
 @time a = one(r1, m1)
 println(a)
-Test.@test a == 224
+Test.@test a === 224
 
-r2 = deepcopy(r1)
-r2[9] = [[43], [43, 9]]
-r2[12] = [[43, 32], [43, 12, 32]]
+function fix(in1)
+    in2 = deepcopy(in1)
+    in2[9] = [[43], [43, 9]]
+    in2[12] = [[43, 32], [43, 12, 32]]
+    in2
+end
 
-t2 = read_file("i19t2")
-Test.@test one(t2...) == 3
+t2r, t2m = read_file("i19t2")
+Test.@test one(t2r, t2m) === 3
+
+r2 = fix(r1)
+t2rf = fix(t2r)
 
 #= function two(data) =#
 #=     data =#
