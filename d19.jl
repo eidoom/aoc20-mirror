@@ -10,6 +10,9 @@ function read_file(name)
     for r in raw
         m = match(r"^(\d+): (.*)$", r)
         ii = parse(Int, m.captures[1]) + 1
+        if ii > length(rules)
+            resize!(rules, ii)
+        end
         r = m.captures[2]
         if r[1] == '"'
             rules[ii] = r[2]
@@ -66,22 +69,27 @@ function builder(rules, i)
 
 end
 
-function one(data)
-    rules, mesgs = data
+function one(rules, mesgs)
     mesgs = Set(mesgs)
     rules = builder(rules, 1)
     length(intersect(mesgs, rules))
 end
 
 t1 = read_file("i19t1")
-inp = read_file("i19")
+r1, m1 = read_file("i19")
 
-println(one(t1))
-Test.@test one(t1) == 2
+Test.@test one(t1...) == 2
 
-@time a = one(inp)
+@time a = one(r1, m1)
 println(a)
 Test.@test a == 224
+
+r2 = deepcopy(r1)
+r2[9] = [[43], [43, 9]]
+r2[12] = [[43, 32], [43, 12, 32]]
+
+t2 = read_file("i19t2")
+Test.@test one(t2...) == 3
 
 #= function two(data) =#
 #=     data =#
