@@ -140,6 +140,51 @@ function deborder(image::BitArray{2})::BitArray{2}
     image[2:(end - 1), 2:(end - 1)]
 end
 
+#                      #
+#    #    ##    ##    ###
+#     #  #  #  #  #  #
+
+middle = BitArray([
+    true,
+    false,
+    false,
+    false,
+    true,
+    true,
+    false,
+    false,
+    false,
+    true,
+    true,
+    false,
+    false,
+    false,
+    true,
+    true,
+    true,
+])
+
+function find_nessie(final)
+    for _ = 1:2
+        for _ = 1:4
+            for line in final
+                for i = 1:(length(line) - length(middle) + 1)
+                    if !middle[i] || line[i]
+                        continue
+                    else
+                        @goto label
+                    end
+                end
+                println(line)
+                return
+                @label label
+            end
+            final = rot_cw(final)
+        end
+        final = hflip(final)
+    end
+end
+
 function proper(data::Vector{Tile})
     len = Int(sqrt(length(data)))
     image = Array{BitArray{2},2}(undef, len, len)
@@ -162,14 +207,12 @@ function proper(data::Vector{Tile})
             end
         end
         if count == 2 && edges[1][1] in (right, bottom) && edges[2][1] in (right, bottom)
-            #= image[p1...] = deborder(tile1.image) =#
-            image[p1...] = tile1.image
+            image[p1...] = deborder(tile1.image)
             c1 = tile1
             push!(done, tile1)
             break
         end
     end
-    #= show_image(c1.image) =#
     stack = [(p1, c1)]
     i = 0
     while length(stack) != 0
@@ -189,8 +232,7 @@ function proper(data::Vector{Tile})
                                 npos = pos .+ (1, 0)
                             end
                             new = align(edge1, edge2, tile.image)
-                            #= image[npos...] = deborder(new) =#
-                            image[npos...] = new
+                            image[npos...] = deborder(new)
                             push!(done, tile)
                             push!(stack, (npos, Tile(tile.num, new)))
 
@@ -214,18 +256,19 @@ function proper(data::Vector{Tile})
             end
         end
     end
-    display(image)
-    println()
     final = hvcat((len, len, len), permutedims(image, (2, 1))...)
-    #= show_image(final) =#
-    show_image(rot_acw(final))
+    #= show_image(hflip(final)) =#
+
+    println(find_nessie(final))
+
+    count(final)
 end
 
 t = read_file("i20t0")
 @time inp = read_file("i20")
 
 Test.@test one(t) == 20899048083289
-@time proper(t)
+@time println(proper(t))
 
 #= @time a = one(inp) =#
 #= println(a) =#
