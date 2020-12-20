@@ -186,23 +186,21 @@ function proper(data::Vector{Tile})
                             elseif edge1 == bottom
                                 npos = pos .+ (1, 0)
                             end
-                            if !isdefined(image, npos[2] * len + npos[1])
-                                new = align(edge1, edge2, tile.image)
-                                #= image[npos...] = deborder(new) =#
-                                image[npos...] = new
-                                push!(done, tile)
-                                push!(stack, (npos, Tile(tile.num, new)))
-                                #= if npos == (3, 3) =#
-                                #=     println(pos, " ", edge1, " ", edge2) =#
-                                #=     show_image(cur.image) =#
-                                #=     println() =#
-                                #=     show_image(tile.image) =#
-                                #=     println() =#
-                                #=     show_image(new) =#
-                                #=     println() =#
-                                #= end =#
-                                break
-                            end
+                            new = align(edge1, edge2, tile.image)
+                            #= image[npos...] = deborder(new) =#
+                            image[npos...] = new
+                            push!(done, tile)
+                            push!(stack, (npos, Tile(tile.num, new)))
+                            #= if npos == (3, 3) =#
+                            #=     println(pos, " ", edge1, " ", edge2) =#
+                            #=     show_image(cur.image) =#
+                            #=     println() =#
+                            #=     show_image(tile.image) =#
+                            #=     println() =#
+                            #=     show_image(new) =#
+                            #=     println() =#
+                            #= end =#
+                            break
                         end
                     end
                 end
