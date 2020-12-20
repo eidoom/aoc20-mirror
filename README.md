@@ -101,6 +101,7 @@ Cellular automata: B3/S23 (Conway's Game of Life) in 3 and 4 dimensions
 ### 19
 
 * Consider [CYK algorithm](https://en.wikipedia.org/wiki/CYK_algorithm)
+    * [see this](https://www.geeksforgeeks.org/cocke-younger-kasami-cyk-algorithm/)
 
 ### 20
 
