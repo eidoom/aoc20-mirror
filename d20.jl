@@ -14,19 +14,19 @@ struct Tile
 end
 
 function side_left(tile::Tile)::BitArray{1}
-    tile.image[1, :]
-end
-
-function side_right(tile::Tile)::BitArray{1}
-    tile.image[end, :]
-end
-
-function side_top(tile::Tile)::BitArray{1}
     tile.image[:, 1]
 end
 
-function side_bottom(tile::Tile)::BitArray{1}
+function side_right(tile::Tile)::BitArray{1}
     tile.image[:, end]
+end
+
+function side_top(tile::Tile)::BitArray{1}
+    tile.image[1, :]
+end
+
+function side_bottom(tile::Tile)::BitArray{1}
+    tile.image[end, :]
 end
 
 function side(tile::Tile, edge::Edge)::BitArray{1}
@@ -120,9 +120,9 @@ function align(edge1::Edge, edge2::Edge, image::BitArray{2})::BitArray{2}
             image = vflip(image)
         end
     elseif Int(edge1) - Int(edge2) == -1
-        image = rot_acw(image)
-    elseif Int(edge1) - Int(edge2) == 1
         image = rot_cw(image)
+    elseif Int(edge1) - Int(edge2) == 1
+        image = rot_acw(image)
     end
     image
 end
@@ -144,8 +144,8 @@ function proper(data::Vector{Tile})
     len = Int(sqrt(length(data)))
     image = Array{BitArray{2},2}(undef, len, len)
     done = []
-    cur = undef
-    pos = (1, 1)
+    c1 = undef
+    p1 = (1, 1)
     for tile1 in data
         count = 0
         edges = []
@@ -162,14 +162,16 @@ function proper(data::Vector{Tile})
             end
         end
         if count == 2 && edges[1][1] in (right, bottom) && edges[2][1] in (right, bottom)
-            #= image[pos...] = deborder(tile1.image) =#
-            image[pos...] = tile1.image
-            cur = tile1
+            #= image[p1...] = deborder(tile1.image) =#
+            image[p1...] = tile1.image
+            c1 = tile1
             push!(done, tile1)
             break
         end
     end
-    stack = [(pos, cur)]
+    #= show_image(c1.image) =#
+    stack = [(p1, c1)]
+    i = 0
     while length(stack) != 0
         pos, cur = pop!(stack)
         for tile in data
@@ -191,15 +193,20 @@ function proper(data::Vector{Tile})
                             image[npos...] = new
                             push!(done, tile)
                             push!(stack, (npos, Tile(tile.num, new)))
-                            #= if npos == (3, 3) =#
-                            #=     println(pos, " ", edge1, " ", edge2) =#
-                            #=     show_image(cur.image) =#
-                            #=     println() =#
-                            #=     show_image(tile.image) =#
-                            #=     println() =#
-                            #=     show_image(new) =#
-                            #=     println() =#
-                            #= end =#
+
+                            if i == 8
+                                println(pos, " ", edge1)
+                                show_image(cur.image)
+                                println()
+                                println(npos, " ", edge2)
+                                show_image(tile.image)
+                                println()
+                                show_image(new)
+                                println()
+
+                                return
+                            end
+                            i += 1
                             break
                         end
                     end
@@ -207,7 +214,9 @@ function proper(data::Vector{Tile})
             end
         end
     end
-    final = hvcat((len, len, len), image...)
+    display(image)
+    println()
+    final = hvcat((len, len, len), permutedims(image, (2, 1))...)
     #= show_image(final) =#
     show_image(rot_acw(final))
 end
