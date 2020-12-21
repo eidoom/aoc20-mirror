@@ -28,13 +28,16 @@ function read_file(
 end
 
 #= recursively generate all strings which are allowed by rules =#
-function builder(rules, i::Int = 1)
+function builder(
+    rules::Vector{Union{Vector{Vector{Int}},Char}},
+    i::Int = 1,
+)::Union{Char,Vector{Union{Char,String}}}
     rule = rules[i]
 
     if isa(rule, Char)
         rule
     else
-        as = []
+        as::Vector{Union{Char,String}} = []
         for set in rule
             if length(set) === 1
                 if length(rule) === 1
@@ -57,6 +60,35 @@ function builder(rules, i::Int = 1)
                 for i in a1, j in a2, k in a3
                     push!(as, i * j * k)
                 end
+            elseif length(set) === 4
+                a1 = builder(rules, set[1])
+                a2 = builder(rules, set[2])
+                a3 = builder(rules, set[3])
+                a4 = builder(rules, set[4])
+                for i in a1, j in a2, k in a3, l in a4
+                    push!(as, i * j * k * l)
+                end
+            elseif length(set) === 5
+                a1 = builder(rules, set[1])
+                a2 = builder(rules, set[2])
+                a3 = builder(rules, set[3])
+                a4 = builder(rules, set[4])
+                a5 = builder(rules, set[5])
+                for i in a1, j in a2, k in a3, l in a4, m in a5
+                    push!(as, i * j * k * l * m)
+                end
+            elseif length(set) === 6
+                a1 = builder(rules, set[1])
+                a2 = builder(rules, set[2])
+                a3 = builder(rules, set[3])
+                a4 = builder(rules, set[4])
+                a5 = builder(rules, set[5])
+                a6 = builder(rules, set[6])
+                for i in a1, j in a2, k in a3, l in a4, m in a5, n in a6
+                    push!(as, i * j * k * l * m * n)
+                end
+            else
+                println("Need more!")
             end
         end
         as
@@ -67,6 +99,7 @@ end
 function one(rules, mesgs)
     mesgs = Set(mesgs)
     allowed = builder(rules)
+    #= println(intersect(mesgs, allowed)) =#
     length(intersect(mesgs, allowed))
 end
 
@@ -88,8 +121,10 @@ Test.@test a === 224
 
 function additions(in1)
     in2 = deepcopy(in1)
-    in2[9] = [[43], [43]]
-    #= in2[12] = [[43, 32], [43, 43, 32, 32]] =#
+    in2[9] = [[43], [43, 43], ]
+    #= in2[9] = [[43], [43, 43], [43, 43, 43], [43, 43, 43, 43], [43, 43, 43, 43, 43]] =#
+    in2[12] = [[43, 32], [43, 43, 32, 32], ]
+    #= in2[12] = [[43, 32], [43, 43, 32, 32], [43, 43, 43, 32, 32, 32], [43, 43, 43, 43, 32, 32, 32, 32]] =#
     in2
 end
 
@@ -105,7 +140,7 @@ Test.@test one(t2r, t2m) === 3
 #=     data =#
 #= end =#
 
-println(one(additions(t2r), t2m))
+@time println(one(additions(t2r), t2m))
 #= Test.@test two(t) == 0 =#
 
 #= @time b = two(inp) =#
