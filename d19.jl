@@ -5,7 +5,9 @@ import Test
 include("./com.jl")
 
 #= rules are indexed by their position in the array =#
-function read_file(name::String)::Tuple{Vector{Union{Vector{Vector{Int}},Char}},Vector{SubString}}
+function read_file(
+    name::String,
+)::Tuple{Vector{Union{Vector{Vector{Int}},Char}},Vector{SubString}}
     raw, mesgs = map(each -> split(each, '\n'), split(Com.file_slurp(name), "\n\n"))
     rules = Vector(undef, length(raw))
     for r in raw
@@ -26,7 +28,7 @@ function read_file(name::String)::Tuple{Vector{Union{Vector{Vector{Int}},Char}},
 end
 
 #= recursively generate all strings which are allowed by rules =#
-function builder(rules::Vector{Union{Vector{Vector{Int}},Char}}, i::Int)::Union{Char,Vector{Union{Char,String}}}
+function builder(rules, i::Int = 1)
     rule = rules[i]
 
     if isa(rule, Char)
@@ -38,7 +40,7 @@ function builder(rules::Vector{Union{Vector{Vector{Int}},Char}}, i::Int)::Union{
         elseif length(rule) === 2
             a1 = builder(rules, rule[1])
             a2 = builder(rules, rule[2])
-            as::Vector{Union{Char,String}} = []
+            as = []
             for i in a1, j in a2
                 push!(as, i * j)
             end
@@ -73,7 +75,7 @@ end
 
 function one(rules, mesgs)
     mesgs = Set(mesgs)
-    allowed = builder(rules, 1)
+    allowed = builder(rules)
     length(intersect(mesgs, allowed))
 end
 
@@ -86,24 +88,33 @@ Test.@test one(t1...) === 2
 println(a)
 Test.@test a === 224
 
-function fix(in1)
-    in2 = deepcopy(in1)
-    in2[9] = [[43], [43, 9]]
-    in2[12] = [[43, 32], [43, 12, 32]]
-    in2
-end
+#= function fix(in1) =#
+#=     in2 = deepcopy(in1) =#
+#=     in2[9] = [[43], [43, 9]] =#
+#=     in2[12] = [[43, 32], [43, 12, 32]] =#
+#=     in2 =#
+#= end =#
+
+#= function additions(in1) =#
+#=     in2 = deepcopy(in1) =#
+#=     in2[9] = [[43], [43, 43]] =#
+#=     in2[12] = [[43, 32], [43, 43, 32, 32]] =#
+#=     in2 =#
+#= end =#
 
 t2r, t2m = read_file("i19t2")
 Test.@test one(t2r, t2m) === 3
 
-r2 = fix(r1)
-t2rf = fix(t2r)
+#= println(builder(t2r)) =#
 
-#= function two(data) =#
+#= t2rf = fix(t2r) =#
+#= r2 = fix(r1) =#
+
+#= function two(rules, mesgs) =#
 #=     data =#
 #= end =#
 
-#= println(two(t)) =#
+#= println(one(additions(t2r), t2m)) =#
 #= Test.@test two(t) == 0 =#
 
 #= @time b = two(inp) =#
