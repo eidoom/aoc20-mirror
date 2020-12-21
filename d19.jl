@@ -4,7 +4,8 @@ import Test
 
 include("./com.jl")
 
-function read_file(name)
+#= rules are indexed by their position in the array =#
+function read_file(name::String)::Tuple{Vector{Union{Vector{Vector{Int}},Char}},Vector{SubString}}
     raw, mesgs = map(each -> split(each, '\n'), split(Com.file_slurp(name), "\n\n"))
     rules = Vector(undef, length(raw))
     for r in raw
@@ -24,7 +25,8 @@ function read_file(name)
     rules, mesgs
 end
 
-function builder(rules, i)
+#= recursively generate all strings which are allowed by rules =#
+function builder(rules::Vector{Union{Vector{Vector{Int}},Char}}, i::Int)::Union{Char,Vector{Union{Char,String}}}
     rule = rules[i]
 
     if isa(rule, Char)
@@ -36,7 +38,7 @@ function builder(rules, i)
         elseif length(rule) === 2
             a1 = builder(rules, rule[1])
             a2 = builder(rules, rule[2])
-            as = []
+            as::Vector{Union{Char,String}} = []
             for i in a1, j in a2
                 push!(as, i * j)
             end
@@ -71,12 +73,12 @@ end
 
 function one(rules, mesgs)
     mesgs = Set(mesgs)
-    rules = builder(rules, 1)
-    length(intersect(mesgs, rules))
+    allowed = builder(rules, 1)
+    length(intersect(mesgs, allowed))
 end
 
 t1 = read_file("i19t1")
-r1, m1 = read_file("i19")
+@time r1, m1 = read_file("i19")
 
 Test.@test one(t1...) === 2
 
