@@ -65,21 +65,15 @@ function read_file(name::String)::Vector{Tile}
 end
 
 function one(data::Vector{Tile})::Int
-    res = 1
-    for tile1 in data
-        count = 0
-        for tile2 in data
-            for edge1 in instances(Edge)[1:4]  # don't flip first tile
-                for edge2 in instances(Edge)
-                    if tile1 !== tile2
-                        if side(tile1, edge1) == side(tile2, edge2)
-                            count += 1
-                        end
-                    end
-                end
-            end
-        end
-        if count === 2
+    res::Int = 1
+    for tile1::Tile in data
+        # don't flip first tile
+        if count(
+            tile1 !== tile2 && side(tile1, edge1) == side(tile2, edge2)
+            for
+            tile2::Tile in data,
+            edge1::Edge in instances(Edge)[1:4], edge2::Edge in instances(Edge)
+        ) === 2
             #= println(tile1.num) =#
             res *= tile1.num
         end
@@ -152,8 +146,8 @@ lower = (1, 4, 7, 10, 13, 16)
 weight = 15
 
 function find_nessie(final::BitArray{2})::Int
-    found = false
-    count = 0
+    found::Bool = false
+    count::Int = 0
     for _ = 1:2  # flips
         for _ = 1:4  # rotations
             for a = 2:(size(final, 1) - 1)  # image row
@@ -181,19 +175,19 @@ function proper(data::Vector{Tile})::Int
     #= for i = 1:length(data) =#
     #=     image[i] = BitArray(fill(false, 8, 8)) =#
     #= end =#
-    done = []
+    done::Vector{Tile} = []
     c1 = undef
-    p1 = (1, 1)
+    p1::Tuple{Int,Int} = (1, 1)
     for tile1 in data
-        count = 0
-        edges = []
+        count::Int = 0
+        edges::Vector{Tuple{Edge,Edge}} = []
         for tile2 in data, edge1 in instances(Edge)[1:4], edge2 in instances(Edge)
             if tile1 !== tile2 && side(tile1, edge1) == side(tile2, edge2)
                 count += 1
                 push!(edges, (edge1, edge2))
             end
         end
-        if count === 2 && edges[1][1] in (right, bottom) && edges[2][1] in (right, bottom)
+        if count === 2 && all(i -> edges[i][1] in (right, bottom), 1:2)
             image[p1...] = deborder(tile1.image)
             c1 = tile1
             push!(done, tile1)
@@ -201,12 +195,12 @@ function proper(data::Vector{Tile})::Int
             break
         end
     end
-    stack = [(p1, c1)]
+    stack::Vector{Tuple{Tuple{Int,Int},Tile}} = [(p1, c1)]
     while length(stack) !== 0
         pos, cur = pop!(stack)
-        for tile in data
+        for tile::Tile in data
             if !(tile in done)
-                for edge1 in instances(Edge)[1:4], edge2 in instances(Edge)
+                for edge1::Edge in instances(Edge)[1:4], edge2::Edge in instances(Edge)
                     if side(cur, edge1) == side(tile, edge2)
                         if edge1 === right
                             npos = pos .+ (0, 1)
@@ -220,7 +214,7 @@ function proper(data::Vector{Tile})::Int
                         #= if any(e -> e === 0 || e > len, npos) =#
                         #=     continue =#
                         #= end =#
-                        new = align(edge1, edge2, tile.image)
+                        new::BitArray{2} = align(edge1, edge2, tile.image)
                         #= println(pos, " ", edge1, "; ", npos, " ", edge2) =#
                         image[npos...] = deborder(new)
                         push!(done, tile)
@@ -232,9 +226,9 @@ function proper(data::Vector{Tile})::Int
         end
     end
     #= println(image) =#
-    final = hvcat(Tuple(fill(len, len)), permutedims(image, (2, 1))...)
+    final::BitArray{2} = hvcat(Tuple(fill(len, len)), permutedims(image, (2, 1))...)
     show_image(final)
-    sightings = find_nessie(final)
+    sightings::Int = find_nessie(final)
 
     count(final) - sightings * weight
 end
@@ -242,7 +236,7 @@ end
 t = read_file("i20t0")
 @time inp = read_file("i20")
 
-#= Test.@test one(t) === 20899048083289 =#
+Test.@test one(t) === 20899048083289
 
 #= @time a = one(inp) =#
 #= println(a) =#
