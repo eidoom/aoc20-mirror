@@ -6,8 +6,6 @@ include("./com.jl")
 
 @enum Edge top right bottom left flip_top flip_right flip_bottom flip_left
 
-#= pairs = Dict(top => bottom, left => right, right => left, bottom => top) =#
-
 struct Tile
     num::Int
     image::BitArray{2}
@@ -113,15 +111,15 @@ function align(edge1::Edge, edge2::Edge, image::BitArray{2})::BitArray{2}
         end
         edge2 = Edge(Int(edge2) - 4)
     end
-    if abs(Int(edge1) - Int(edge2)) == 0
+    if abs(Int(edge1) - Int(edge2)) === 0
         if edge2 in (left, right)
             image = hflip(image)
         else
             image = vflip(image)
         end
-    elseif Int(edge1) - Int(edge2) == -1
+    elseif Int(edge1) - Int(edge2) === -1
         image = rot_cw(image)
-    elseif Int(edge1) - Int(edge2) == 1
+    elseif Int(edge1) - Int(edge2) === 1
         image = rot_acw(image)
     end
     image
@@ -140,44 +138,35 @@ function deborder(image::BitArray{2})::BitArray{2}
     image[2:(end - 1), 2:(end - 1)]
 end
 
+# Nessie
+#              1111111111
+#    01234567890123456789
 #                      #
 #    #    ##    ##    ###
 #     #  #  #  #  #  #
 
-middle = BitArray([
-    true,
-    false,
-    false,
-    false,
-    true,
-    true,
-    false,
-    false,
-    false,
-    true,
-    true,
-    false,
-    false,
-    false,
-    true,
-    true,
-    true,
-])
+upper = 18
+middle = (0, 5, 6, 11, 12, 17, 18, 19)
+lower = (1, 4, 7, 10, 13, 16)
+weight = 15
 
 function find_nessie(final)
-    for _ = 1:2
-        for _ = 1:4
-            for line in final
-                for i = 1:(length(line) - length(middle) + 1)
-                    if !middle[i] || line[i]
-                        continue
-                    else
-                        @goto label
+    found = false
+    count = 0
+    for _ = 1:2  # flips
+        for _ = 1:4  # rotations
+            for a = 2:(size(final, 1) - 1)  # image row
+                for i = 1:(size(final, 2) - middle[end] + 1)  # subset of row
+                    if all(z -> final[a, i + z], middle) &&
+                       final[a - 1, i + upper] &&
+                       all(z -> final[a + 1, i + z], lower)
+                        count += 1
+                        found = true
                     end
                 end
-                println(line)
-                return
-                @label label
+            end
+            if found
+                return count
             end
             final = rot_cw(final)
         end
@@ -236,18 +225,6 @@ function proper(data::Vector{Tile})
                             push!(done, tile)
                             push!(stack, (npos, Tile(tile.num, new)))
 
-                            if i == 8
-                                println(pos, " ", edge1)
-                                show_image(cur.image)
-                                println()
-                                println(npos, " ", edge2)
-                                show_image(tile.image)
-                                println()
-                                show_image(new)
-                                println()
-
-                                return
-                            end
                             i += 1
                             break
                         end
@@ -257,30 +234,23 @@ function proper(data::Vector{Tile})
         end
     end
     final = hvcat((len, len, len), permutedims(image, (2, 1))...)
-    #= show_image(hflip(final)) =#
 
-    println(find_nessie(final))
+    sightings = find_nessie(final)
 
-    count(final)
+    count(final) - sightings * weight
 end
 
 t = read_file("i20t0")
 @time inp = read_file("i20")
 
 Test.@test one(t) == 20899048083289
-@time println(proper(t))
 
-#= @time a = one(inp) =#
-#= println(a) =#
-#= Test.@test a == 23386616781851 =#
+@time a = one(inp)
+println(a)
+Test.@test a == 23386616781851
 
-#= function two(data) =#
-#=     data =#
-#= end =#
+Test.@test proper(t) == 273
 
-#= println(two(t)) =#
-#= Test.@test two(t) == 0 =#
-
-#= @time b = two(inp) =#
+#= @time b = proper(inp) =#
 #= println(b) =#
 #= Test.@test b == 0 =#
