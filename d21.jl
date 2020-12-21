@@ -4,8 +4,10 @@ import Test
 
 include("./com.jl")
 
-function read_file(name::String)::Vector{Tuple{Vector{SubString},Vector{SubString}}}
-    res::Vector{Tuple{Vector{SubString},Vector{SubString}}} = []
+function read_file(
+    name::AbstractString,
+)::Vector{Tuple{Vector{AbstractString},Vector{AbstractString}}}
+    res::Vector{Tuple{Vector{AbstractString},Vector{AbstractString}}} = []
     for line in Com.file_lines(name)
         ing, aln = split(line[1:(end - 1)], " (contains ")
         push!(res, (split(ing), split(aln, ", ")))
@@ -13,9 +15,11 @@ function read_file(name::String)::Vector{Tuple{Vector{SubString},Vector{SubStrin
     res
 end
 
-function one(recipes::Vector{Tuple{Vector{SubString},Vector{SubString}}})::Int
-    alns::Set{SubString} = Set()
-    ings::Set{SubString} = Set()
+function one(
+    recipes::Vector{Tuple{Vector{AbstractString},Vector{AbstractString}}},
+)::Tuple{Int,Set{AbstractString},Set{AbstractString},Set{AbstractString}}
+    alns::Set{AbstractString} = Set()
+    ings::Set{AbstractString} = Set()
     for (r_ings, r_alns) in recipes
         for ing in r_ings
             push!(ings, ing)
@@ -24,8 +28,7 @@ function one(recipes::Vector{Tuple{Vector{SubString},Vector{SubString}}})::Int
             push!(alns, aln)
         end
     end
-    #= dan = [] =#
-    cnts::Set{SubString} = Set()
+    cnts::Set{AbstractString} = Set()
     for aln in alns
         cnt = deepcopy(ings)
         for (r_ings, r_alns) in recipes
@@ -33,13 +36,11 @@ function one(recipes::Vector{Tuple{Vector{SubString},Vector{SubString}}})::Int
                 cnt = intersect(cnt, r_ings)
             end
         end
-        #= push!(dan, (aln, cnt)) =#
         for c in cnt
             push!(cnts, c)
         end
     end
-    #= println(dan) =#
-    saf::Set{SubString} = setdiff(ings, cnts)
+    saf::Set{AbstractString} = setdiff(ings, cnts)
     ctr::Int = 0
     for (r_ings, _) in recipes
         for ing in r_ings
@@ -48,26 +49,47 @@ function one(recipes::Vector{Tuple{Vector{SubString},Vector{SubString}}})::Int
             end
         end
     end
-    ctr
+    (ctr, saf, alns, cnts)
 end
 
 t = read_file("i21t0")
 @time inp = read_file("i21")
 
-#= @time println(one(t)) =#
-Test.@test one(t) == 5
+tc, ts, ta, td = one(t)
+Test.@test tc == 5
 
-@time a = one(inp)
+@time a, is, ia, id = one(inp)
 println(a)
 Test.@test a == 2374
 
-#= function two(data) =#
-#=     data =#
-#= end =#
+function two(recipes, saf, alns, dan)
+    pairs = []
+    for aln in alns
+        cnt = deepcopy(dan)
+        for (r_ings, r_alns) in recipes
+            if aln in r_alns
+                cnt = intersect(cnt, r_ings)
+            end
+        end
+        push!(pairs, (cnt, aln))
+    end
+    sol = []
+    while length(sol) != length(dan)
+        for (ings, aln) in pairs
+            if length(ings) == 1
+                ing = first(ings)
+                push!(sol, (ing, aln))
+                for a in eachindex(pairs)
+                    pairs[a] = (filter(i -> i != ing, pairs[a][1]), pairs[a][2])
+                end
+            end
+        end
+    end
+    join(map(j -> j[1], sort(sol, by = i -> i[2])), ",")
+end
 
-#= println(two(t)) =#
-#= Test.@test two(t) == 0 =#
+Test.@test two(t, ts, ta, td) == "mxmxvkd,sqjhc,fvjkl"
 
-#= @time b = two(inp) =#
-#= println(b) =#
-#= Test.@test b == 0 =#
+@time b = two(inp, is, ia, id)
+println(b)
+Test.@test b == "fbtqkzc,jbbsjh,cpttmnv,ccrbr,tdmqcl,vnjxjg,nlph,mzqjxq"
