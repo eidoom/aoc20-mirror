@@ -16,19 +16,19 @@ t = read_file("iNNt0")
 inp = read_file("iNN")
 
 println(one(t))
-#= Test.@test one(t) == 0 =#
+#= Test.@test one(t) === 0 =#
 
 #= @time a = one(inp) =#
 #= println(a) =#
-#= Test.@test a == 0 =#
+#= Test.@test a === 0 =#
 
 #= function two(data) =#
 #=     data =#
 #= end =#
 
 #= println(two(t)) =#
-#= Test.@test two(t) == 0 =#
+#= Test.@test two(t) === 0 =#
 
 #= @time b = two(inp) =#
 #= println(b) =#
-#= Test.@test b == 0 =#
+#= Test.@test b === 0 =#
