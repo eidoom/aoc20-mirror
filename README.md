@@ -48,6 +48,8 @@ Strict parser
 
 [Tribonacci sequence](https://oeis.org/A000073)
 
+* see [nacci.jl](./nacci.jl)
+
 ### 11
 
 [Cellular automaton](https://en.wikipedia.org/wiki/Cellular_automaton) with steady state
@@ -100,10 +102,19 @@ Cellular automata: B3/S23 (Conway's Game of Life) in 3 and 4 dimensions
 
 ### 19
 
+More parsing
+
 * Consider [CYK algorithm](https://en.wikipedia.org/wiki/CYK_algorithm)
-    * [see this](https://www.geeksforgeeks.org/cocke-younger-kasami-cyk-algorithm/)
+    * [algorithm](https://www.geeksforgeeks.org/cocke-younger-kasami-cyk-algorithm/)
+    * [CNF](https://en.wikipedia.org/wiki/Chomsky_normal_form)
+    * [also](https://en.wikipedia.org/wiki/Phrase_structure_rules)
+    * see [grammar.jl](./grammar.jl)
 
 ### 20
+
+Jigsaw
+
+* D4: see [here](https://en.wikipedia.org/wiki/Dihedral_group), [here](https://en.wikipedia.org/wiki/Examples_of_groups#dihedral_group_of_order_8)
 
 ### 21
 
