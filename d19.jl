@@ -40,7 +40,9 @@ function builder(rules, i::Int = 1)
                 if length(rule) === 1
                     return builder(rules, set[1][1])
                 else
-                    push!(as, builder(rules, set[1]))
+                    for i in builder(rules, set[1])
+                        push!(as, i)
+                    end
                 end
             elseif length(set) === 2
                 a1 = builder(rules, set[1])
@@ -84,12 +86,12 @@ Test.@test a === 224
 #=     in2 =#
 #= end =#
 
-#= function additions(in1) =#
-#=     in2 = deepcopy(in1) =#
-#=     in2[9] = [[43], [43, 43]] =#
-#=     in2[12] = [[43, 32], [43, 43, 32, 32]] =#
-#=     in2 =#
-#= end =#
+function additions(in1)
+    in2 = deepcopy(in1)
+    in2[9] = [[43], [43]]
+    #= in2[12] = [[43, 32], [43, 43, 32, 32]] =#
+    in2
+end
 
 t2r, t2m = read_file("i19t2")
 Test.@test one(t2r, t2m) === 3
@@ -103,7 +105,7 @@ Test.@test one(t2r, t2m) === 3
 #=     data =#
 #= end =#
 
-#= println(one(additions(t2r), t2m)) =#
+println(one(additions(t2r), t2m))
 #= Test.@test two(t) == 0 =#
 
 #= @time b = two(inp) =#
