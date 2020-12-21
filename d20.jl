@@ -80,6 +80,7 @@ function one(data::Vector{Tile})::Int
             end
         end
         if count === 2
+            #= println(tile1.num) =#
             res *= tile1.num
         end
     end
@@ -177,6 +178,9 @@ end
 function proper(data::Vector{Tile})::Int
     len = Int(sqrt(length(data)))
     image = Array{BitArray{2},2}(undef, len, len)
+    #= for i = 1:length(data) =#
+    #=     image[i] = BitArray(fill(false, 8, 8)) =#
+    #= end =#
     done = []
     c1 = undef
     p1 = (1, 1)
@@ -199,6 +203,7 @@ function proper(data::Vector{Tile})::Int
             image[p1...] = deborder(tile1.image)
             c1 = tile1
             push!(done, tile1)
+            #= println(tile1.num) =#
             break
         end
     end
@@ -220,7 +225,11 @@ function proper(data::Vector{Tile})::Int
                             elseif edge1 === bottom
                                 npos = pos .+ (1, 0)
                             end
+                            #= if any(e -> e === 0 || e > len, npos) =#
+                            #=     continue =#
+                            #= end =#
                             new = align(edge1, edge2, tile.image)
+                            #= println(pos, " ", edge1, "; ", npos, " ", edge2) =#
                             image[npos...] = deborder(new)
                             push!(done, tile)
                             push!(stack, (npos, Tile(tile.num, new)))
@@ -232,8 +241,9 @@ function proper(data::Vector{Tile})::Int
             end
         end
     end
-    final = hvcat((len, len, len), permutedims(image, (2, 1))...)
-
+    #= println(image) =#
+    final = hvcat(Tuple(fill(len, len)), permutedims(image, (2, 1))...)
+    show_image(final)
     sightings = find_nessie(final)
 
     count(final) - sightings * weight
@@ -242,14 +252,14 @@ end
 t = read_file("i20t0")
 @time inp = read_file("i20")
 
-Test.@test one(t) === 20899048083289
+#= Test.@test one(t) === 20899048083289 =#
 
 @time a = one(inp)
 println(a)
 Test.@test a === 23386616781851
 
-Test.@test proper(t) === 273
+#= Test.@test proper(t) === 273 =#
 
-#= @time b = proper(inp) =#
-#= println(b) =#
+@time b = proper(inp)
+println(b)
 #= Test.@test b == 0 =#
