@@ -9,7 +9,7 @@ struct Recipe{T<:AbstractString}
     alns::Vector{T}
 end
 
-function read_file(name::AbstractString)::Vector{Recipe}
+function read_file(name::String)::Vector{Recipe}
     res::Vector{Recipe} = []
     for line in Com.file_lines(name)
         ing, aln = split(line[1:(end - 1)], " (contains ")
@@ -18,9 +18,9 @@ function read_file(name::AbstractString)::Vector{Recipe}
     res
 end
 
-function one(recipes::Vector{Recipe})::Tuple{Int,Set{AbstractString},Set{AbstractString}}
-    alns::Set{AbstractString} = Set()
-    ings::Set{AbstractString} = Set()
+function one(recipes::Vector{Recipe})::Tuple{Int,Set{SubString},Set{SubString}}
+    alns::Set{SubString} = Set()
+    ings::Set{SubString} = Set()
     for r in recipes
         for ing in r.ings
             push!(ings, ing)
@@ -29,7 +29,7 @@ function one(recipes::Vector{Recipe})::Tuple{Int,Set{AbstractString},Set{Abstrac
             push!(alns, aln)
         end
     end
-    cnts::Set{AbstractString} = Set()
+    cnts::Set{SubString} = Set()
     for aln in alns
         cnt = deepcopy(ings)
         for r in recipes
@@ -41,7 +41,7 @@ function one(recipes::Vector{Recipe})::Tuple{Int,Set{AbstractString},Set{Abstrac
             push!(cnts, c)
         end
     end
-    saf::Set{AbstractString} = setdiff(ings, cnts)
+    saf::Set{SubString} = setdiff(ings, cnts)
     (count(ing in saf for r in recipes for ing in r.ings), alns, cnts)
 end
 
@@ -55,12 +55,8 @@ Test.@test tc == 5
 println(a)
 Test.@test a == 2374
 
-function two(
-    recipes::Vector{Recipe},
-    alns::Set{AbstractString},
-    dan::Set{AbstractString},
-)::String
-    pairs::Vector{Tuple{Set{AbstractString},AbstractString}} = []
+function two(recipes::Vector{Recipe}, alns::Set{SubString}, dan::Set{SubString})::String
+    pairs::Vector{Tuple{Set{SubString},SubString}} = []
     for aln in alns
         cnt = deepcopy(dan)
         for r in recipes
@@ -70,7 +66,7 @@ function two(
         end
         push!(pairs, (cnt, aln))
     end
-    sol::Vector{Tuple{AbstractString,AbstractString}} = []
+    sol::Vector{Tuple{SubString,SubString}} = []
     while length(sol) != length(dan)
         for (ings, aln) in pairs
             if length(ings) == 1
