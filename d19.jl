@@ -33,13 +33,15 @@ function builder(rules, i::Int = 1)
 
     if isa(rule, Char)
         rule
-    elseif length(rule) === 1 && length(rule[1]) === 1
-        builder(rules, rule[1][1])
     else
         as = []
         for set in rule
             if length(set) === 1
-                push!(as, builder(rules, set[1]))
+                if length(rule) === 1
+                    return builder(rules, set[1][1])
+                else
+                    push!(as, builder(rules, set[1]))
+                end
             elseif length(set) === 2
                 a1 = builder(rules, set[1])
                 a2 = builder(rules, set[2])
