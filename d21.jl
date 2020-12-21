@@ -4,9 +4,9 @@ import Test
 
 include("./com.jl")
 
-struct Recipe
-    ings::Vector{AbstractString}
-    alns::Vector{AbstractString}
+struct Recipe{T<:AbstractString}
+    ings::Vector{T}
+    alns::Vector{T}
 end
 
 function read_file(name::AbstractString)::Vector{Recipe}
