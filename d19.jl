@@ -33,38 +33,25 @@ function builder(rules, i::Int = 1)
 
     if isa(rule, Char)
         rule
-    elseif length(rule) === 1
-        rule = rule[1]
-        if length(rule) === 1
-            builder(rules, rule[1])
-        elseif length(rule) === 2
-            a1 = builder(rules, rule[1])
-            a2 = builder(rules, rule[2])
-            as = []
-            for i in a1, j in a2
-                push!(as, i * j)
-            end
-            as
-        else
-            a1 = builder(rules, rule[1])
-            a2 = builder(rules, rule[2])
-            a3 = builder(rules, rule[3])
-            as = []
-            for i in a1, j in a2, k in a3
-                push!(as, i * j * k)
-            end
-            as
-        end
+    elseif length(rule) === 1 && length(rule[1]) === 1
+        builder(rules, rule[1][1])
     else
         as = []
         for set in rule
             if length(set) === 1
                 push!(as, builder(rules, set[1]))
-            else
+            elseif length(set) === 2
                 a1 = builder(rules, set[1])
                 a2 = builder(rules, set[2])
                 for i in a1, j in a2
                     push!(as, i * j)
+                end
+            elseif length(set) === 3
+                a1 = builder(rules, set[1])
+                a2 = builder(rules, set[2])
+                a3 = builder(rules, set[3])
+                for i in a1, j in a2, k in a3
+                    push!(as, i * j * k)
                 end
             end
         end
