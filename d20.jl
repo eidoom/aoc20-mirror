@@ -150,7 +150,7 @@ middle = (0, 5, 6, 11, 12, 17, 18, 19)
 lower = (1, 4, 7, 10, 13, 16)
 weight = 15
 
-function find_nessie(final)
+function find_nessie(final::BitArray{2})::Int
     found = false
     count = 0
     for _ = 1:2  # flips
@@ -174,7 +174,7 @@ function find_nessie(final)
     end
 end
 
-function proper(data::Vector{Tile})
+function proper(data::Vector{Tile})::Int
     len = Int(sqrt(length(data)))
     image = Array{BitArray{2},2}(undef, len, len)
     done = []
@@ -195,7 +195,7 @@ function proper(data::Vector{Tile})
                 end
             end
         end
-        if count == 2 && edges[1][1] in (right, bottom) && edges[2][1] in (right, bottom)
+        if count === 2 && edges[1][1] in (right, bottom) && edges[2][1] in (right, bottom)
             image[p1...] = deborder(tile1.image)
             c1 = tile1
             push!(done, tile1)
@@ -204,27 +204,26 @@ function proper(data::Vector{Tile})
     end
     stack = [(p1, c1)]
     i = 0
-    while length(stack) != 0
+    while length(stack) !== 0
         pos, cur = pop!(stack)
         for tile in data
             if !(tile in done)
                 for edge1 in instances(Edge)[1:4]
                     for edge2 in instances(Edge)
                         if side(cur, edge1) == side(tile, edge2)
-                            if edge1 == right
+                            if edge1 === right
                                 npos = pos .+ (0, 1)
-                            elseif edge1 == left
+                            elseif edge1 === left
                                 npos = pos .+ (0, -1)
-                            elseif edge1 == top
+                            elseif edge1 === top
                                 npos = pos .+ (-1, 0)
-                            elseif edge1 == bottom
+                            elseif edge1 === bottom
                                 npos = pos .+ (1, 0)
                             end
                             new = align(edge1, edge2, tile.image)
                             image[npos...] = deborder(new)
                             push!(done, tile)
                             push!(stack, (npos, Tile(tile.num, new)))
-
                             i += 1
                             break
                         end
@@ -243,13 +242,13 @@ end
 t = read_file("i20t0")
 @time inp = read_file("i20")
 
-Test.@test one(t) == 20899048083289
+Test.@test one(t) === 20899048083289
 
 @time a = one(inp)
 println(a)
-Test.@test a == 23386616781851
+Test.@test a === 23386616781851
 
-Test.@test proper(t) == 273
+Test.@test proper(t) === 273
 
 #= @time b = proper(inp) =#
 #= println(b) =#
