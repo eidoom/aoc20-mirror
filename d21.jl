@@ -17,7 +17,7 @@ end
 
 function one(
     recipes::Vector{Tuple{Vector{AbstractString},Vector{AbstractString}}},
-)::Tuple{Int,Set{AbstractString},Set{AbstractString},Set{AbstractString}}
+)::Tuple{Int,Set{AbstractString},Set{AbstractString}}
     alns::Set{AbstractString} = Set()
     ings::Set{AbstractString} = Set()
     for (r_ings, r_alns) in recipes
@@ -49,20 +49,20 @@ function one(
             end
         end
     end
-    (ctr, saf, alns, cnts)
+    (ctr, alns, cnts)
 end
 
 t = read_file("i21t0")
 @time inp = read_file("i21")
 
-tc, ts, ta, td = one(t)
+tc, ta, td = one(t)
 Test.@test tc == 5
 
-@time a, is, ia, id = one(inp)
+@time a, ia, id = one(inp)
 println(a)
 Test.@test a == 2374
 
-function two(recipes, saf, alns, dan)
+function two(recipes, alns, dan)::String
     pairs = []
     for aln in alns
         cnt = deepcopy(dan)
@@ -88,8 +88,8 @@ function two(recipes, saf, alns, dan)
     join(map(j -> j[1], sort(sol, by = i -> i[2])), ",")
 end
 
-Test.@test two(t, ts, ta, td) == "mxmxvkd,sqjhc,fvjkl"
+Test.@test two(t, ta, td) == "mxmxvkd,sqjhc,fvjkl"
 
-@time b = two(inp, is, ia, id)
+@time b = two(inp, ia, id)
 println(b)
 Test.@test b == "fbtqkzc,jbbsjh,cpttmnv,ccrbr,tdmqcl,vnjxjg,nlph,mzqjxq"
