@@ -127,8 +127,8 @@ function align(edge1::Edge, edge2::Edge, image::BitArray{2})::BitArray{2}
 end
 
 function show_image(image::BitArray{2})
-    for i = 1:size(image, 1)
-        for j = 1:size(image, 2)
+    for i in axes(image, 1)
+        for j in axes(image, 2)
             print(image[i, j] ? '#' : '.')
         end
         println()
@@ -187,16 +187,10 @@ function proper(data::Vector{Tile})::Int
     for tile1 in data
         count = 0
         edges = []
-        for tile2 in data
-            for edge1 in instances(Edge)[1:4]
-                for edge2 in instances(Edge)
-                    if tile1 !== tile2
-                        if side(tile1, edge1) == side(tile2, edge2)
-                            count += 1
-                            push!(edges, (edge1, edge2))
-                        end
-                    end
-                end
+        for tile2 in data, edge1 in instances(Edge)[1:4], edge2 in instances(Edge)
+            if tile1 !== tile2 && side(tile1, edge1) == side(tile2, edge2)
+                count += 1
+                push!(edges, (edge1, edge2))
             end
         end
         if count === 2 && edges[1][1] in (right, bottom) && edges[2][1] in (right, bottom)
@@ -208,34 +202,30 @@ function proper(data::Vector{Tile})::Int
         end
     end
     stack = [(p1, c1)]
-    i = 0
     while length(stack) !== 0
         pos, cur = pop!(stack)
         for tile in data
             if !(tile in done)
-                for edge1 in instances(Edge)[1:4]
-                    for edge2 in instances(Edge)
-                        if side(cur, edge1) == side(tile, edge2)
-                            if edge1 === right
-                                npos = pos .+ (0, 1)
-                            elseif edge1 === left
-                                npos = pos .+ (0, -1)
-                            elseif edge1 === top
-                                npos = pos .+ (-1, 0)
-                            elseif edge1 === bottom
-                                npos = pos .+ (1, 0)
-                            end
-                            #= if any(e -> e === 0 || e > len, npos) =#
-                            #=     continue =#
-                            #= end =#
-                            new = align(edge1, edge2, tile.image)
-                            #= println(pos, " ", edge1, "; ", npos, " ", edge2) =#
-                            image[npos...] = deborder(new)
-                            push!(done, tile)
-                            push!(stack, (npos, Tile(tile.num, new)))
-                            i += 1
-                            break
+                for edge1 in instances(Edge)[1:4], edge2 in instances(Edge)
+                    if side(cur, edge1) == side(tile, edge2)
+                        if edge1 === right
+                            npos = pos .+ (0, 1)
+                        elseif edge1 === left
+                            npos = pos .+ (0, -1)
+                        elseif edge1 === top
+                            npos = pos .+ (-1, 0)
+                        elseif edge1 === bottom
+                            npos = pos .+ (1, 0)
                         end
+                        #= if any(e -> e === 0 || e > len, npos) =#
+                        #=     continue =#
+                        #= end =#
+                        new = align(edge1, edge2, tile.image)
+                        #= println(pos, " ", edge1, "; ", npos, " ", edge2) =#
+                        image[npos...] = deborder(new)
+                        push!(done, tile)
+                        push!(stack, (npos, Tile(tile.num, new)))
+                        break
                     end
                 end
             end
@@ -254,12 +244,12 @@ t = read_file("i20t0")
 
 #= Test.@test one(t) === 20899048083289 =#
 
-@time a = one(inp)
-println(a)
-Test.@test a === 23386616781851
+#= @time a = one(inp) =#
+#= println(a) =#
+#= Test.@test a === 23386616781851 =#
 
-#= Test.@test proper(t) === 273 =#
+Test.@test proper(t) === 273
 
-@time b = proper(inp)
-println(b)
+#= @time b = proper(inp) =#
+#= println(b) =#
 #= Test.@test b == 0 =#
