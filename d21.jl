@@ -4,36 +4,37 @@ import Test
 
 include("./com.jl")
 
-function read_file(
-    name::AbstractString,
-)::Vector{Tuple{Vector{AbstractString},Vector{AbstractString}}}
-    res::Vector{Tuple{Vector{AbstractString},Vector{AbstractString}}} = []
+struct Recipe
+    ings::Vector{AbstractString}
+    alns::Vector{AbstractString}
+end
+
+function read_file(name::AbstractString)::Vector{Recipe}
+    res::Vector{Recipe} = []
     for line in Com.file_lines(name)
         ing, aln = split(line[1:(end - 1)], " (contains ")
-        push!(res, (split(ing), split(aln, ", ")))
+        push!(res, Recipe(split(ing), split(aln, ", ")))
     end
     res
 end
 
-function one(
-    recipes::Vector{Tuple{Vector{AbstractString},Vector{AbstractString}}},
-)::Tuple{Int,Set{AbstractString},Set{AbstractString}}
+function one(recipes::Vector{Recipe})::Tuple{Int,Set{AbstractString},Set{AbstractString}}
     alns::Set{AbstractString} = Set()
     ings::Set{AbstractString} = Set()
-    for (r_ings, r_alns) in recipes
-        for ing in r_ings
+    for r in recipes
+        for ing in r.ings
             push!(ings, ing)
         end
-        for aln in r_alns
+        for aln in r.alns
             push!(alns, aln)
         end
     end
     cnts::Set{AbstractString} = Set()
     for aln in alns
         cnt = deepcopy(ings)
-        for (r_ings, r_alns) in recipes
-            if aln in r_alns
-                cnt = intersect(cnt, r_ings)
+        for r in recipes
+            if aln in r.alns
+                cnt = intersect(cnt, r.ings)
             end
         end
         for c in cnt
@@ -41,15 +42,7 @@ function one(
         end
     end
     saf::Set{AbstractString} = setdiff(ings, cnts)
-    ctr::Int = 0
-    for (r_ings, _) in recipes
-        for ing in r_ings
-            if ing in saf
-                ctr += 1
-            end
-        end
-    end
-    (ctr, alns, cnts)
+    (count(ing in saf for r in recipes for ing in r.ings), alns, cnts)
 end
 
 t = read_file("i21t0")
@@ -62,18 +55,22 @@ Test.@test tc == 5
 println(a)
 Test.@test a == 2374
 
-function two(recipes, alns, dan)::String
-    pairs = []
+function two(
+    recipes::Vector{Recipe},
+    alns::Set{AbstractString},
+    dan::Set{AbstractString},
+)::String
+    pairs::Vector{Tuple{Set{AbstractString},AbstractString}} = []
     for aln in alns
         cnt = deepcopy(dan)
-        for (r_ings, r_alns) in recipes
-            if aln in r_alns
-                cnt = intersect(cnt, r_ings)
+        for r in recipes
+            if aln in r.alns
+                cnt = intersect(cnt, r.ings)
             end
         end
         push!(pairs, (cnt, aln))
     end
-    sol = []
+    sol::Vector{Tuple{AbstractString,AbstractString}} = []
     while length(sol) != length(dan)
         for (ings, aln) in pairs
             if length(ings) == 1
