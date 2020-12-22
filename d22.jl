@@ -4,11 +4,11 @@ import Test
 
 include("./com.jl")
 
-function read_file(name)
+function read_file(name::String)
     map(
         player -> parse.(Int, split(player, '\n')[2:end]),
         split(Com.file_slurp(name), "\n\n"),
-    )
+       )
 end
 
 #= seems to run pretty much the same =#
@@ -55,7 +55,11 @@ Test.@test one(t0) === 306
 println(a)
 Test.@test a === 32472
 
-function two(decks, g::Int = 1, v::Bool = false)::Tuple{Int,Vector{Int}}
+function two(
+    decks,
+    g::Int = 1,
+    v::Bool = false,
+)::Tuple{Int,Vector{Int}}
     @debug "=== Game $(g) ===\n"
     deck1, deck2 = deepcopy(decks)
     i::Int = 1
@@ -65,7 +69,7 @@ function two(decks, g::Int = 1, v::Bool = false)::Tuple{Int,Vector{Int}}
         @debug "Round $(i) (Game $(g))"
         @debug "Player 1's deck: $(deck1)"
         @debug "Player 2's deck: $(deck2)"
-        h = hash((deck1, deck2))
+        h::UInt = hash((deck1, deck2))
         if h in prev
             return (1, deck1)
         else
@@ -82,11 +86,7 @@ function two(decks, g::Int = 1, v::Bool = false)::Tuple{Int,Vector{Int}}
                 winner = two((deck1[1:card1], deck2[1:card2]), gg, v)[1]
                 @debug "The winner of game $(gg) is player $(winner)!\n\n...anyway, back to game $(g)."
             else
-                if card1 > card2
-                    winner = 1
-                else
-                    winner = 2
-                end
+                winner = card1 > card2 ? 1 : 2
             end
         end
         @debug "Player $(winner) wins round $(i) of game $(g)!\n"
