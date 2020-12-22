@@ -112,9 +112,9 @@ function align(edge1::Edge, edge2::Edge, image::BitArray{2})::BitArray{2}
         else
             image = vflip(image)
         end
-    elseif Int(edge1) - Int(edge2) === -1
+    elseif Int(edge1) - Int(edge2) in (-1, 3)
         image = rot_cw(image)
-    elseif Int(edge1) - Int(edge2) === 1
+    elseif Int(edge1) - Int(edge2) in (1, -3)
         image = rot_acw(image)
     end
     image
@@ -127,6 +127,7 @@ function show_image(image::BitArray{2})
         end
         println()
     end
+    println()
 end
 
 function deborder(image::BitArray{2})::BitArray{2}
@@ -227,7 +228,7 @@ function proper(data::Vector{Tile})::Int
     end
     #= println(image) =#
     final::BitArray{2} = hvcat(Tuple(fill(len, len)), permutedims(image, (2, 1))...)
-    show_image(final)
+    #= show_image(final) =#
     sightings::Int = find_nessie(final)
 
     count(final) - sightings * weight
@@ -235,6 +236,12 @@ end
 
 t = read_file("i20t0")
 @time inp = read_file("i20")
+
+#= ti1 = t[2].image =#
+#= ti2 = t[1].image =#
+#= show_image(ti1) =#
+#= show_image(ti2) =#
+#= show_image(align(left, right, ti2)) =#
 
 Test.@test one(t) === 20899048083289
 
