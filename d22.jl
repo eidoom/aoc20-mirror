@@ -4,11 +4,11 @@ import Test
 
 include("./com.jl")
 
-function read_file(name::String)
-    map(
+function read_file(name::String)::Tuple{Vector{Int},Vector{Int}}
+    tuple(map(
         player -> parse.(Int, split(player, '\n')[2:end]),
         split(Com.file_slurp(name), "\n\n"),
-       )
+    )...)
 end
 
 #= seems to run pretty much the same =#
@@ -29,7 +29,7 @@ end
 #=     )) =#
 #= end =#
 
-function one(decks)
+function one(decks::Tuple{Vector{Int},Vector{Int}})::Int
     deck1, deck2 = deepcopy(decks)
     while all(deck -> length(deck) !== 0, [deck1, deck2])
         card1 = popfirst!(deck1)
@@ -47,7 +47,7 @@ function one(decks)
 end
 
 t0 = read_file("i22t0")
-inp = read_file("i22")
+@time inp = read_file("i22")
 
 Test.@test one(t0) === 306
 
@@ -55,11 +55,7 @@ Test.@test one(t0) === 306
 println(a)
 Test.@test a === 32472
 
-function two(
-    decks,
-    g::Int = 1,
-    v::Bool = false,
-)::Tuple{Int,Vector{Int}}
+function two(decks::Tuple{Vector{Int},Vector{Int}}, g::Int = 1)::Tuple{Int,Vector{Int}}
     @debug "=== Game $(g) ===\n"
     deck1, deck2 = deepcopy(decks)
     i::Int = 1
@@ -83,7 +79,7 @@ function two(
             if length(deck1) >= card1 && length(deck2) >= card2
                 @debug "Playing a sub-game to determine the winner...\n"
                 global gg += 1
-                winner = two((deck1[1:card1], deck2[1:card2]), gg, v)[1]
+                winner = two((deck1[1:card1], deck2[1:card2]), gg)[1]
                 @debug "The winner of game $(gg) is player $(winner)!\n\n...anyway, back to game $(g)."
             else
                 winner = card1 > card2 ? 1 : 2
@@ -100,9 +96,9 @@ function two(
     (winner, winner === 1 ? deck1 : deck2)
 end
 
-function game(decks, v = false)
+function game(decks::Tuple{Vector{Int},Vector{Int}})::Int
     global gg = 1
-    winner, winning_deck = two(decks, gg, v)
+    winner, winning_deck = two(decks, gg)
     @debug "== Post-game results ==\nPlayer $(winner)'s deck: $(winning_deck)"
     sum(map(card -> reduce(*, card), enumerate(reverse(winning_deck))))
 end
