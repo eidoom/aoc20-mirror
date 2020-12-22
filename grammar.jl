@@ -1,34 +1,30 @@
 #!/usr/bin/env julia
 
-function cyk_parse(rules, symbols)
-    n = length(symbols)
+#= https://en.wikipedia.org/wiki/CYK_algorithm#As_pseudocode =#
+function cyk_parse(rules, symbol)
+    n = length(symbol)
 
-    table = fill(Set(), (n, n))
+    table = BitArray(fill(false, (n, n, length(rules))))
 
-    for j = 1:n
-        for (lhs, rhss) in rules
-            for rhs in rhss
-
-                # If a terminal is found
-                if length(rhs) === 1 && rhs[1] === symbols[j]
-                    push!(table[j, j], lhs)
+    for i = 1:n
+        for a in axes(rules, 1)
+            for rhs in rules[a]
+                if length(rhs) === 1 && rhs[1] === symbol[i]
+                    table[i, 1, a] = true
                 end
             end
         end
+    end
 
-        for i = j:-1:1
-            for k = i:j
-                if k < n
-                    println(i, " ", j, " ", k)
-                    for (lhs, rhss) in rules
-                        for rhs in rhss
-
-                            # If a terminal is found
-                            if length(rhs) === 2 &&
-                               rhs[1] in table[i, k] &&
-                               rhs[2] in table[k + 1, j]
-                                push!(table[i, j], lhs)
-                            end
+    for j = 2:n
+        for i = 1:(n - j + 1)
+            for k = 1:(j - 1)
+                for a in axes(rules, 1)
+                    for rhs in rules[a]
+                        if length(rhs) === 2 &&
+                           table[i, k, rhs[1]] &&
+                           table[i + k, j - k, rhs[2]]
+                            table[i, j, a] = true
                         end
                     end
                 end
@@ -36,14 +32,28 @@ function cyk_parse(rules, symbols)
         end
     end
 
-    # If word can be formed by rules of given grammar
-    length(table[1, n]) !== 0
+    table[1, n, 1]
 end
 
 function example()
-    the_rules = Dict(0 => [[1, 2]], 1 => [['a']], 2 => [[1, 3], [3, 1]], 3 => [['b']])
+    the_rules = [[[2, 3]], [['a']], [[2, 4], [4, 2]], [['b']]]
 
-    the_words = ["aab", "aba", "ab", "ba", "abb","bba"]
+    the_words = [
+        "aab",
+        "aba",
+        "ab",
+        "ba",
+        "abb",
+        "bba",
+        "bab",
+        "baa",
+        "a",
+        "b",
+        "aa",
+        "bb",
+        "aaa",
+        "bbb",
+    ]
     for word in the_words
         println(word, " ", cyk_parse(the_rules, word))
     end

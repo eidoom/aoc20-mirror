@@ -104,8 +104,9 @@ Cellular automata: B3/S23 (Conway's Game of Life) in 3 and 4 dimensions
 
 More parsing
 
-* Consider [CYK algorithm](https://en.wikipedia.org/wiki/CYK_algorithm)
-    * [algorithm](https://www.geeksforgeeks.org/cocke-younger-kasami-cyk-algorithm/)
+* I did part one by generating all possible strings and comparing messages to these. This was too slow for part two, so I used:
+* [CYK algorithm](https://en.wikipedia.org/wiki/CYK_algorithm)
+    * [pseudocode algorithm](https://en.wikipedia.org/wiki/CYK_algorithm#As_pseudocode)
     * [visualisation](https://www.xarg.org/tools/cyk-algorithm/)
         * i19t0
             ```
@@ -114,7 +115,7 @@ More parsing
             C -> BD | DB
             D -> b
             ```
-    * [CNF](https://en.wikipedia.org/wiki/Chomsky_normal_form)
+    * Rules must be in [CNF](https://en.wikipedia.org/wiki/Chomsky_normal_form)
     * [also](https://en.wikipedia.org/wiki/Phrase_structure_rules)
     * see [grammar.jl](./grammar.jl)
 
