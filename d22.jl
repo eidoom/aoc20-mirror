@@ -55,49 +55,29 @@ Test.@test one(t0) === 306
 println(a)
 Test.@test a === 32472
 
-gg = 1
-
-function two(decks, g = gg, v = false)
-    if v
-        println("=== Game ", g, " ===\n")
-    end
+function two(decks, g = 1, v = false)
+    @debug "=== Game $(g) ===\n"
     deck1, deck2 = deepcopy(decks)
     i = 1
     prev = []
     winner = undef
     while all(deck -> length(deck) !== 0, [deck1, deck2])
-        if v
-            println("Round ", i, " (Game ", g, ")")
-            println("Player 1's deck: ", deck1)
-            println("Player 2's deck: ", deck2)
-        end
+        @debug "Round $(i) (Game $(g))"
+        @debug "Player 1's deck: $(deck1)"
+        @debug "Player 2's deck: $(deck2)"
         if (deck1, deck2) in prev
             return (1, deck1)
         else
             push!(prev, deepcopy((deck1, deck2)))
             card1 = popfirst!(deck1)
             card2 = popfirst!(deck2)
-            if v
-                println("Player 1's plays: ", card1)
-                println("Player 2's plays: ", card2)
-            end
+            @debug "Player 1's plays: $(card1)"
+            @debug "Player 2's plays: $(card2)"
             if length(deck1) >= card1 && length(deck2) >= card2
-                if v
-                    println("Playing a sub-game to determine the winner...\n")
-                    global gg += 1
-                end
+                @debug "Playing a sub-game to determine the winner...\n"
+                global gg += 1
                 winner = two((deck1[1:card1], deck2[1:card2]), gg, v)[1]
-                if v
-                    println(
-                        "The winner of game ",
-                        gg,
-                        " is player ",
-                        winner,
-                        "!\n\n...anyway, back to game ",
-                        g,
-                        ".",
-                    )
-                end
+                @debug "The winner of game $(gg) is player $(winner)!\n\n...anyway, back to game $(g)."
             else
                 if card1 > card2
                     winner = 1
@@ -106,9 +86,7 @@ function two(decks, g = gg, v = false)
                 end
             end
         end
-        if v
-            println("Player ", winner, " wins round ", i, " of game ", g, "!\n")
-        end
+        @debug "Player $(winner) wins round $(i) of game $(g)!\n"
         if winner === 1
             deck1 = vcat(deck1, [card1, card2])
         else
@@ -120,17 +98,16 @@ function two(decks, g = gg, v = false)
 end
 
 function game(decks, v = false)
+    global gg = 1
     winner, winning_deck = two(decks, gg, v)
-    if v
-        println("== Post-game results ==\nPlayer ", winner, "'s deck: ", winning_deck)
-    end
+    @debug "== Post-game results ==\nPlayer $(winner)'s deck: $(winning_deck)"
     sum(map(card -> reduce(*, card), enumerate(reverse(winning_deck))))
 end
 
 t1 = read_file("i22t1")
 
 Test.@test game(t0) === 291
-Test.@test game(t1, false) === 105
+Test.@test game(t1) === 105
 
 @time b = game(inp)
 println(b)
