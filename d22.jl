@@ -65,12 +65,15 @@ function two(decks, g = 1, v = false)
         @debug "Round $(i) (Game $(g))"
         @debug "Player 1's deck: $(deck1)"
         @debug "Player 2's deck: $(deck2)"
-        if (deck1, deck2) in prev
+        h = hash((deck1, deck2))
+        if h in prev
             return (1, deck1)
         else
-            push!(prev, deepcopy((deck1, deck2)))
-            card1 = popfirst!(deck1)
-            card2 = popfirst!(deck2)
+            push!(prev, h)
+            card1 = deck1[1]
+            card2 = deck2[1]
+            deck1 = deck1[2:end]
+            deck2 = deck2[2:end]
             @debug "Player 1's plays: $(card1)"
             @debug "Player 2's plays: $(card2)"
             if length(deck1) >= card1 && length(deck2) >= card2
