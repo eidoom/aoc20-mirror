@@ -46,22 +46,36 @@ function one(decks)
     ))
 end
 
-t = read_file("i22t0")
+t0 = read_file("i22t0")
 inp = read_file("i22")
 
-println(one(t))
-Test.@test one(t) === 306
+Test.@test one(t0) === 306
 
 @time a = one(inp)
 println(a)
 Test.@test a === 32472
 
-#= function two(data) =#
-#=     data =#
-#= end =#
+function two(decks)
+    deck1, deck2 = deepcopy(decks)
+    while all(deck -> length(deck) !== 0, [deck1, deck2])
+        card1 = popfirst!(deck1)
+        card2 = popfirst!(deck2)
+        if card1 > card2
+            deck1 = vcat(deck1, [card1, card2])
+        else
+            deck2 = vcat(deck2, [card2, card1])
+        end
+    end
+    sum(map(
+        card -> reduce(*, card),
+        enumerate(reverse(length(deck1) === 0 ? deck2 : deck1)),
+    ))
+end
 
-#= println(two(t)) =#
-#= Test.@test two(t) === 0 =#
+t1 = read_file("i22t1")
+
+#= println(two(t1)) =#
+#= Test.@test two(t1) === 0 =#
 
 #= @time b = two(inp) =#
 #= println(b) =#

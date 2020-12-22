@@ -12,11 +12,11 @@ function one(data)
     data
 end
 
-t = read_file("iNNt0")
+t0 = read_file("iNNt0")
 inp = read_file("iNN")
 
-println(one(t))
-#= Test.@test one(t) === 0 =#
+println(one(t0))
+#= Test.@test one(t0) === 0 =#
 
 #= @time a = one(inp) =#
 #= println(a) =#
@@ -26,8 +26,8 @@ println(one(t))
 #=     data =#
 #= end =#
 
-#= println(two(t)) =#
-#= Test.@test two(t) === 0 =#
+#= println(two(t0)) =#
+#= Test.@test two(t0) === 0 =#
 
 #= @time b = two(inp) =#
 #= println(b) =#
