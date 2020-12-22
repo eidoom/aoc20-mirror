@@ -55,81 +55,69 @@ Test.@test one(t0) === 306
 println(a)
 Test.@test a === 32472
 
-function rc(decks)
-    deck1, deck2 = deepcopy(decks)
-    prev = []
-    i = 1
-    card1 = undef
-    card2 = undef
-    while true
-        println("Round ", i)
-        if (deck1, deck2) in prev
-            return 1
-        end
-        push!(prev, (deck1, deck2))
-        println("Player 1's deck: ", deck1)
-        println("Player 2's deck: ", deck2)
-        card1 = popfirst!(deck1)
-        card2 = popfirst!(deck2)
-        println("Player 1's plays: ", card1)
-        println("Player 2's plays: ", card2)
-        if !(length(deck1) >= card1 && length(deck2) >= card2)
-            break
-        end
-        deck1 = deck1[1:card1]
-        deck2 = deck2[1:card2]
-        i += 1
-    end
-    if card1 > card2
-        1
-    else
-        2
-    end
-end
+gg = 1
 
-function two(decks)
+function two(decks, g = gg)
+    println("=== Game ", g, " ===\n")
     deck1, deck2 = deepcopy(decks)
     i = 1
+    prev = []
+    winner = undef
     while all(deck -> length(deck) !== 0, [deck1, deck2])
-        println("Round ", i, " (Game 1)")
+        println("Round ", i, " (Game ", g, ")")
         println("Player 1's deck: ", deck1)
         println("Player 2's deck: ", deck2)
-        card1 = popfirst!(deck1)
-        card2 = popfirst!(deck2)
-        println("Player 1's plays: ", card1)
-        println("Player 2's plays: ", card2)
-        if length(deck1) >= card1 && length(deck2) >= card2
-            println("Playing a sub-game to determine the winner...\n")
-            winner = rc((deck1[1:card1], deck2[1:card2]))
+        if (deck1, deck2) in prev
+            return (1, deck1)
         else
-            if card1 > card2
-                winner = 1
+            push!(prev, (deck1, deck2))
+            card1 = popfirst!(deck1)
+            card2 = popfirst!(deck2)
+            println("Player 1's plays: ", card1)
+            println("Player 2's plays: ", card2)
+            if length(deck1) >= card1 && length(deck2) >= card2
+                println("Playing a sub-game to determine the winner...\n")
+                global gg += 1
+                winner = two((deck1[1:card1], deck2[1:card2]), gg)[1]
+                println(
+                    "The winner of game ",
+                    gg,
+                    " is player ",
+                    winner,
+                    "!\n\n...anyway, back to game ",
+                    g,
+                    ".",
+                )
             else
-                winner = 2
+                if card1 > card2
+                    winner = 1
+                else
+                    winner = 2
+                end
             end
         end
+        println("Player ", winner, " wins round ", i, " of game ", g, "!\n")
         if winner === 1
             deck1 = vcat(deck1, [card1, card2])
         else
             deck2 = vcat(deck2, [card2, card1])
         end
-        println("Player ",winner," wins round ",i," of game 1!\n")
         i += 1
-        if i == 18
-            break
-        end
     end
-    sum(map(
-        card -> reduce(*, card),
-        enumerate(reverse(length(deck1) === 0 ? deck2 : deck1)),
-    ))
+    (winner, winner === 1 ? deck1 : deck2)
 end
 
-t1 = read_file("i22t1")
+function game(decks)
+    winner, winning_deck = two(decks)
+    println("== Post-game results ==\nPlayer ", winner, "'s deck: ", winning_deck)
+    sum(map(card -> reduce(*, card), enumerate(reverse(winning_deck))))
+end
 
-println(two(t0))
-#= Test.@test two(t1) === 0 =#
+#= t1 = read_file("i22t1") =#
 
-#= @time b = two(inp) =#
+game(t0)
+Test.@test game(t0) === 291
+
+#= @time b = game(inp) =#
 #= println(b) =#
 #= Test.@test b === 0 =#
