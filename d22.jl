@@ -55,12 +55,12 @@ Test.@test one(t0) === 306
 println(a)
 Test.@test a === 32472
 
-function two(decks, g = 1, v = false)
+function two(decks, g::Int = 1, v::Bool = false)::Tuple{Int,Vector{Int}}
     @debug "=== Game $(g) ===\n"
     deck1, deck2 = deepcopy(decks)
-    i = 1
-    prev = []
-    winner = undef
+    i::Int = 1
+    prev::Set{UInt} = Set()
+    winner::Int = 0
     while all(deck -> length(deck) !== 0, [deck1, deck2])
         @debug "Round $(i) (Game $(g))"
         @debug "Player 1's deck: $(deck1)"

@@ -120,6 +120,8 @@ Jigsaw
 
 ### 22
 
+[Hashes](https://en.wikipedia.org/wiki/Hash_function)
+
 * To print out the gameplay, use `JULIA_DEBUG="d22" ./d22.jl`
 
 ### 23
