@@ -1,17 +1,7 @@
 #!/usr/bin/env julia
 
-# Rules of the grammar
-the_rules = Dict(
-    "NP" => [["Det", "Nom"]],  # noun phrase
-    "Nom" => [["AP", "Nom"], ["book"], ["orange"], ["man"]],  # noun
-    "AP" => [["Adv", "A"], ["heavy"], ["orange"], ["tall"]],  # adjective phrase
-    "Det" => [["a"]],  # determiner
-    "Adv" => [["very"], ["extremely"]],  # adjective modifier
-    "A" => [["heavy"], ["orange"], ["tall"], ["muscular"]],  # adjective
-)
-
-function cyk_parse(rules, words)
-    n = length(words)
+function cyk_parse(rules, symbols)
+    n = length(symbols)
 
     table = fill(Set(), (n, n))
 
@@ -20,7 +10,7 @@ function cyk_parse(rules, words)
             for rhs in rhss
 
                 # If a terminal is found
-                if length(rhs) === 1 && rhs[1] == words[j]
+                if length(rhs) === 1 && rhs[1] === symbols[j]
                     push!(table[j, j], lhs)
                 end
             end
@@ -29,7 +19,7 @@ function cyk_parse(rules, words)
         for i = j:-1:1
             for k = i:j
                 if k < n
-                    #= println(i, " ", j, " ", k) =#
+                    println(i, " ", j, " ", k)
                     for (lhs, rhss) in rules
                         for rhs in rhss
 
@@ -47,14 +37,16 @@ function cyk_parse(rules, words)
     end
 
     # If word can be formed by rules of given grammar
-    if length(table[1, n]) !== 0
-        println("true")
-    else
-        println("false")
+    length(table[1, n]) !== 0
+end
+
+function example()
+    the_rules = Dict(0 => [[1, 2]], 1 => [['a']], 2 => [[1, 3], [3, 1]], 3 => [['b']])
+
+    the_words = ["aab", "aba", "ab", "ba", "abb","bba"]
+    for word in the_words
+        println(word, " ", cyk_parse(the_rules, word))
     end
 end
 
-the_words = split("a very heavy orange book")
-#= the_words = split("the quick brown fox jumps over the lazy dog") =#
-
-cyk_parse(the_rules, the_words)
+@time example()
