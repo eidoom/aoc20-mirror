@@ -140,8 +140,15 @@ Test.@test one(t2r, t2m) === 3
 #=     data =#
 #= end =#
 
-@time println(one(additions(t2r), t2m))
+#= @time println(one(additions(t2r), t2m)) =#
 #= Test.@test two(t) == 0 =#
+
+function two(rules, mesgs)
+    println(rules)
+    println(mesgs)
+end
+
+@time println(two(additions(t2r), t2m))
 
 #= @time b = two(inp) =#
 #= println(b) =#

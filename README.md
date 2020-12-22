@@ -106,6 +106,7 @@ More parsing
 
 * Consider [CYK algorithm](https://en.wikipedia.org/wiki/CYK_algorithm)
     * [algorithm](https://www.geeksforgeeks.org/cocke-younger-kasami-cyk-algorithm/)
+    * [visualisation](https://www.xarg.org/tools/cyk-algorithm/)
     * [CNF](https://en.wikipedia.org/wiki/Chomsky_normal_form)
     * [also](https://en.wikipedia.org/wiki/Phrase_structure_rules)
     * see [grammar.jl](./grammar.jl)
