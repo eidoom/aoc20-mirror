@@ -137,6 +137,8 @@ Jigsaw
 
 Data structures
 
+* I used a linked list implemented on a (contiguous memory) array. The starting position is not recorded in the "container" (it's a circle). Each element has value given by index and next value in list given by entry.
+
 ### 24
 
 ### 25
