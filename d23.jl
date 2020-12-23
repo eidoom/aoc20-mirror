@@ -4,26 +4,26 @@ import Test
 
 include("./com.jl")
 
-function read_file(name)
+function read_file(name::String)::Vector{Int}
     parse.(Int, collect(Com.file_slurp(name)))
 end
 
-function one(circle, moves)
-    n = length(circle)
-    i = 1
-    for m = 1:moves
+function one(circle::Vector{Int}, moves::Int)::String
+    n::Int = length(circle)
+    i::Int = 1
+    for m::Int = 1:moves
         @debug "-- move $(m) --"
         @debug "i: $(i)"
         @debug "cups: $(circle)"
-        cur = circle[i]
+        cur::Int = circle[i]
         if i > n - 3
             circle = circshift(circle, 3)
             i -= (n - 3)
         end
-        lifted = circle[(i + 1):(i + 3)]
-        remain = vcat(circle[1:i], circle[(i + 4):end])
+        lifted::Vector{Int} = circle[(i + 1):(i + 3)]
+        remain::Vector{Int} = vcat(circle[1:i], circle[(i + 4):end])
         @debug "pick up: $(lifted)"
-        dest = nothing
+        dest::Union{Int,Nothing} = nothing
         while dest === nothing
             cur = mod(cur - 1, 1:n)
             dest = findfirst(x -> x === cur, remain)
@@ -39,12 +39,12 @@ function one(circle, moves)
     @debug "-- final --"
     @debug "cups: $(circle)"
 
-    one = findfirst(x -> x === 1, circle)
+    one::Int = findfirst(x -> x === 1, circle)
     join(circshift(circle, n - one)[1:(end - 1)])
 end
 
 t0 = read_file("i23t0")
-inp = read_file("i23")
+@time inp = read_file("i23")
 
 Test.@test one(t0, 10) === "92658374"
 Test.@test one(t0, 100) === "67384529"
