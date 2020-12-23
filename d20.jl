@@ -89,35 +89,96 @@ function hflip(image::BitArray{2})::BitArray{2}
     image[:, end:-1:1]
 end
 
+function hvflip(image::BitArray{2})::BitArray{2}
+    image[end:-1:1, end:-1:1]
+end
+
+function trans(image::BitArray{2})::BitArray{2}
+    permutedims(image, (2, 1))
+end
+
 function rot_cw(image::BitArray{2})::BitArray{2}
-    hflip(permutedims(image, (2, 1)))
+    hflip(trans(image))
 end
 
 function rot_acw(image::BitArray{2})::BitArray{2}
-    vflip(permutedims(image, (2, 1)))
+    vflip(trans(image))
 end
 
 function align(edge1::Edge, edge2::Edge, image::BitArray{2})::BitArray{2}
-    if Int(edge2) > 3
-        if edge2 in (flip_left, flip_right)
-            image = vflip(image)
-        elseif edge2 in (flip_top, flip_bottom)
-            image = hflip(image)
+    if edge1 === top
+        if edge2 === top
+            image |> vflip
+        elseif edge2 === right
+            image |> trans
+        elseif edge2 === bottom
+            image
+        elseif edge2 === left
+            image |> rot_acw
+        elseif edge2 === flip_top
+            image |> hvflip
+        elseif edge2 === flip_right
+            image |> rot_cw
+        elseif edge2 === flip_bottom
+            image |> hflip
+        elseif edge2 === flip_left
+            image |> hflip |> rot_acw
         end
-        edge2 = Edge(Int(edge2) - 4)
-    end
-    if abs(Int(edge1) - Int(edge2)) === 0
-        if edge2 in (left, right)
-            image = hflip(image)
-        else
-            image = vflip(image)
+    elseif edge1 === right
+        if edge2 === top
+            image |> trans
+        elseif edge2 === right
+            image |> hflip
+        elseif edge2 === bottom
+            image |> rot_cw
+        elseif edge2 === left
+            image
+        elseif edge2 === flip_top
+            image |> rot_acw
+        elseif edge2 === flip_right
+            image |> hvflip
+        elseif edge2 === flip_bottom
+            image |> rot_cw |> vflip
+        elseif edge2 === flip_left
+            image |> vflip
         end
-    elseif Int(edge1) - Int(edge2) in (-1, 3)
-        image = rot_cw(image)
-    elseif Int(edge1) - Int(edge2) in (1, -3)
-        image = rot_acw(image)
+    elseif edge1 === bottom
+        if edge2 === top
+            image
+        elseif edge2 === right
+            image |> rot_acw
+        elseif edge2 === bottom
+            image |> vflip
+        elseif edge2 === left
+            image |> trans
+        elseif edge2 === flip_top
+            image |> hflip
+        elseif edge2 === flip_right
+            image |> rot_acw |> hflip
+        elseif edge2 === flip_bottom
+            image |> hvflip
+        elseif edge2 === flip_left
+            image |> rot_cw
+        end
+    elseif edge1 === left
+        if edge2 === top
+            image |> rot_cw
+        elseif edge2 === right
+            image
+        elseif edge2 === bottom
+            image |> trans
+        elseif edge2 === left
+            image |> hflip
+        elseif edge2 === flip_top
+            image |> rot_cw |> vflip
+        elseif edge2 === flip_right
+            image |> vflip
+        elseif edge2 === flip_bottom
+            image |> rot_acw
+        elseif edge2 === flip_left
+            image |> hvflip
+        end
     end
-    image
 end
 
 function show_image(image::BitArray{2})
@@ -217,6 +278,10 @@ function proper(data::Vector{Tile})::Int
                         #= end =#
                         new::BitArray{2} = align(edge1, edge2, tile.image)
                         #= println(pos, " ", edge1, "; ", npos, " ", edge2) =#
+                        #= show_image(cur.image) =#
+                        #= show_image(tile.image) =#
+                        #= show_image(new) =#
+                        #= return =#
                         image[npos...] = deborder(new)
                         push!(done, tile)
                         push!(stack, (npos, Tile(tile.num, new)))
@@ -249,8 +314,8 @@ Test.@test one(t) === 20899048083289
 #= println(a) =#
 #= Test.@test a === 23386616781851 =#
 
-Test.@test proper(t) === 273
+#= Test.@test proper(t) === 273 =#
 
-#= @time b = proper(inp) =#
-#= println(b) =#
+@time b = proper(inp)
+println(b)
 #= Test.@test b == 0 =#
