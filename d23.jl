@@ -11,10 +11,8 @@ end
 function one(circle, moves)
     n = length(circle)
     i = 1
-    m = 1
-    for _ = 1:moves
+    for m = 1:moves
         @debug "-- move $(m) --"
-        m += 1
         @debug "i: $(i)"
         @debug "cups: $(circle)"
         cur = circle[i]
@@ -28,7 +26,7 @@ function one(circle, moves)
         dest = nothing
         while dest === nothing
             cur = mod(cur - 1, 1:n)
-            dest = findfirst(x -> x === (cur), remain)
+            dest = findfirst(x -> x === cur, remain)
         end
         @debug "I: $(dest)"
         if dest < i
@@ -55,12 +53,38 @@ Test.@test one(t0, 100) === "67384529"
 println(a)
 Test.@test a === "45286397"
 
-#= function two(data) =#
-#=     data =#
-#= end =#
+function two(starter::Vector{Int})::Int
+    #= moves::Int = 10000000 =#
+    moves::Int = 100
+    circle::Vector{Int} = vcat(starter, 10:1000000)
+    n::Int = length(circle)
+    i::Int = 1
+    for _ = 1:moves
+        cur::Int = circle[i]
+        if i > n - 3
+            circle = circshift(circle, 3)
+            i -= (n - 3)
+        end
+        lifted::Vector{Int} = circle[(i + 1):(i + 3)]
+        remain::Vector{Int} = vcat(circle[1:i], circle[(i + 4):end])
+        dest::Union{Int,Nothing} = nothing
+        while dest === nothing
+            cur = mod(cur - 1, 1:n)
+            dest = findfirst(x -> x === cur, remain)
+        end
+        if dest < i
+            i += 3
+        end
+        circle = vcat(remain[1:dest], lifted, remain[(dest + 1):end])
+        i = mod(i + 1, 1:9)
+    end
 
-#= println(two(t0)) =#
-#= Test.@test two(t0) === 0 =#
+    one::Int = findfirst(x -> x === 1, circle)
+    *(circle[(one + 1):(one + 2)]...)
+end
+
+@time println(two(t0))
+#= Test.@test two(t0) === 149245887792 =#
 
 #= @time b = two(inp) =#
 #= println(b) =#
