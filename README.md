@@ -4,9 +4,10 @@
 
 ## Language
 
-Using [Julia](https://docs.julialang.org/en/v1/manual/getting-started/), so far at least.
+Using [Julia](https://julialang.org/) ([also](https://en.wikipedia.org/wiki/Julia_(programming_language))).
 
-[Handy cheatsheet](https://juliabyexample.helpmanual.io/)
+* [Docs](https://docs.julialang.org/)
+* [Handy cheatsheet](https://juliabyexample.helpmanual.io/)
 
 ## Days
 
@@ -19,6 +20,8 @@ Warm up
 Strict [parser](https://en.wikipedia.org/wiki/Parsing#Computer_languages)
 
 ### [3 Toboggan Trajectory](https://adventofcode.com/2020/day/3)
+
+Loops and moduluses
 
 ### [4 Passport Processing](https://adventofcode.com/2020/day/4)
 
@@ -139,7 +142,7 @@ Sets
 
 Data structures
 
-* I used a linked list implemented on a (contiguous memory) array. The starting position is not recorded in the "container" (it's a circle). Each element has value given by index and next value in list given by entry.
+* I used a circular singly linked list implemented on a (contiguous memory) array. The starting position is not recorded in the "container" (it's a circle). Each element has value given by index and next value in list given by entry.
 
 ### [24](https://adventofcode.com/240240/day/24)
 
