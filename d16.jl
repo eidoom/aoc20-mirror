@@ -8,6 +8,7 @@ const Rule = NTuple{2,NTuple{2,Int}}
 const Rules = Dict{String,Rule}
 const Ticket = Vector{Int}
 const Tickets = Vector{Ticket}
+const Fields = Vector{String}
 
 function read_rules(data::Vector{SubString{String}})::Rules
     rules = Rules()
@@ -30,11 +31,11 @@ function read_file(name::String)::Tuple{Rules,Ticket,Tickets}
     read_rules(rules), first(read_tickets(yours)), read_tickets(nearby)
 end
 
-function check_ticket(rule::Rule, n::Int)
+function check_ticket(rule::Rule, n::Int)::Bool
     any((low <= n <= high) for (low, high) in rule)
 end
 
-function check_valid(rules::Rules, n::Int)
+function check_valid(rules::Rules, n::Int)::Bool
     any(rule -> check_ticket(rule, n), values(rules))
 end
 
@@ -62,7 +63,7 @@ println(a)
 Test.@test a === 27911
 
 #= go through "columns of the ticket matrix" to see which fields they satisfy =#
-function possibilities(rules::Rules, tickets::Tickets)::Vector{Vector{String}}
+function possibilities(rules::Rules, tickets::Tickets)::Vector{Fields}
     pos = []
     for col in axes(tickets[1], 1)
         this = []
@@ -77,8 +78,8 @@ function possibilities(rules::Rules, tickets::Tickets)::Vector{Vector{String}}
 end
 
 #= find the correct choice of field for each column by iteratively setting columns with only one choice and removing that choice from its positions (so then there's another with only one choice, and so on) =#
-function ordering(pos::Vector{Vector{String}})::Vector{String}
-    order = Vector{String}(undef, length(pos))
+function ordering(pos::Vector{Fields})::Fields
+    order = Fields(undef, length(pos))
     i = 1
     while any(p -> length(p) !== 0, pos)
         if length(pos[i]) === 1
@@ -96,7 +97,7 @@ end
 #= look at tickets which contain only numbers that are valid by any field, then find the correct ordering of fields, then give product of departure fields =#
 function two(
     data::Tuple{Rules,Ticket,Tickets},
-)::Iterators.Zip{Tuple{Vector{String},Vector{Int}}}
+)::Iterators.Zip{Tuple{Fields,Vector{Int}}}
     rules, yours, nearby = data
     valid = filter(ticket -> all(n -> check_valid(rules, n), ticket), nearby)
     pos = possibilities(rules, valid)

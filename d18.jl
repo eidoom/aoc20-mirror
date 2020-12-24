@@ -7,11 +7,13 @@ include("./com.jl")
 #= represent the different symbols ['+', '*', '(', ')'] as enums =#
 @enum Sym plus times left right
 
+const Letter = Union{Int,Sym}
+
 #= turn strings into arrays of Int and Sym =#
-function read_file(name::String)::Vector{Vector{Union{Sym,Int}}}
-    lines::Vector{Vector{Union{Sym,Int}}} = []
+function read_file(name::String)::Vector{Vector{Letter}}
+    lines = Vector{Letter}[]
     for expr::String in Com.file_lines(name)
-        line::Vector{Union{Sym,Int}} = []
+        line = Letter[]
         for i::SubString in split(expr)
             if i[1] === '+'
                 push!(line, plus)
@@ -40,22 +42,21 @@ end
 
 #= pure left-to-right operator precedence =#
 #= it's faster to return an array here than an Int =#
-function arithmetic(line::Vector{Union{Sym,Int}})::Vector{Union{Int,Sym}}
+function arithmetic(line::Vector{Letter})::Vector{Letter}
     while length(line) > 1
-        line::Vector{Union{Sym,Int}} =
+        line::Vector{Letter} =
             vcat([line[2] === plus ? line[1] + line[3] : line[1] * line[3]], line[4:end])
     end
     line
 end
 
 #= "recursive descent parser" for parentheses =#
-function brackets(line::Vector{Union{Sym,Int}}, maths)::Vector{Union{Sym,Int}}
-    check = findfirst(i::Union{Sym,Int} -> i === left, line)
+function brackets(line::Vector{Letter}, maths)::Vector{Letter}
+    check = findfirst(i::Letter -> i === left, line)
     if check !== nothing
         brackets(vcat(line[1:(check - 1)], brackets(line[(check + 1):end], maths)), maths)
     else
-        finish::Union{Nothing,Int} =
-            findfirst(i::Union{Sym,Int} -> i === right, line[1:end])
+        finish = findfirst(i::Letter -> i === right, line[1:end])
         if finish !== nothing
             vcat(maths(line[1:(finish - 1)]), line[(finish + 1):end])
         else
@@ -65,8 +66,8 @@ function brackets(line::Vector{Union{Sym,Int}}, maths)::Vector{Union{Sym,Int}}
 end
 
 #= sum of result of each expression =#
-function evaluate(data::Vector{Vector{Union{Sym,Int}}}, maths)::Int
-    sum(line::Vector{Union{Sym,Int}} -> brackets(line, maths)[1], data)
+function evaluate(data::Vector{Vector{Letter}}, maths)::Int
+    sum(line -> brackets(line, maths)[1], data)
 end
 
 t = read_file("i18t0")
@@ -80,13 +81,13 @@ Test.@test a === 280014646144
 
 #= addition has higher operation precedence than multiplication =#
 #= it would be faster to return an Int here, but then part 1 would be slowed down more than the gain in part 2 =#
-function arithmetic2(line::Vector{Union{Sym,Int}})::Vector{Union{Int,Sym}}
+function arithmetic2(line::Vector{Letter})::Vector{Letter}
     while length(line) > 1
-        i::Union{Nothing,Int} = findfirst(c::Union{Sym,Int} -> c === plus, line)
+        i = findfirst(c::Letter -> c === plus, line)
         if i === nothing
             return [reduce(*, line[1:2:end])]
         end
-        line::Vector{Union{Sym,Int}} =
+        line::Vector{Letter} =
             vcat(line[1:(i - 2)], [line[i - 1] + line[i + 1]], line[(i + 2):end])
     end
     line
