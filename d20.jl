@@ -233,9 +233,9 @@ end
 function proper(data::Vector{Tile})::Int
     len = Int(sqrt(length(data)))
     image = Array{BitArray{2},2}(undef, len, len)
-    done::Vector{Tile} = []
+    done::Vector{Int} = Int[]
     c1 = undef
-    p1::Tuple{Int,Int} = (1, 1)
+    p1::NTuple{2,Int} = (1, 1)
     for tile1 in data
         count::Int = 0
         edges::Vector{Tuple{Edge,Edge}} = []
@@ -248,15 +248,15 @@ function proper(data::Vector{Tile})::Int
         if count === 2 && all(i -> edges[i][1] in (right, bottom), 1:2)
             image[p1...] = deborder(tile1.image)
             c1 = tile1
-            push!(done, tile1)
+            push!(done, tile1.num)
             break
         end
     end
-    stack::Vector{Tuple{Tuple{Int,Int},Tile}} = [(p1, c1)]
+    stack::Vector{Tuple{NTuple{2,Int},Tile}} = [(p1, c1)]
     while length(stack) !== 0
         pos, cur = pop!(stack)
         for tile::Tile in data
-            if !(tile in done)
+            if !(tile.num in done)
                 for edge1::Edge in instances(Edge)[1:4], edge2::Edge in instances(Edge)
                     if side(cur, edge1) == side(tile, edge2)
                         if edge1 === right
@@ -270,7 +270,7 @@ function proper(data::Vector{Tile})::Int
                         end
                         new::BitArray{2} = align(edge1, edge2, tile.image)
                         image[npos...] = deborder(new)
-                        push!(done, tile)
+                        push!(done, tile.num)
                         push!(stack, (npos, Tile(tile.num, new)))
                         break
                     end
@@ -278,7 +278,7 @@ function proper(data::Vector{Tile})::Int
             end
         end
     end
-    final::BitArray{2} = hvcat(Tuple(fill(len, len)), permutedims(image, (2, 1))...)
+    final::BitArray{2} = hvcat(Tuple(fill(len, len)), permutedims(image)...)
     sightings::Int = find_nessie(final)
 
     count(final) - sightings * weight
