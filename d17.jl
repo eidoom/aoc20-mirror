@@ -9,7 +9,7 @@ function read_file(name)
     map(line -> BitArray(state === '#' for state in line), Com.file_lines(name))
 end
 
-#= B3/S23 (Conway's Game of Life in N D) =#
+#= 6 iterations of B3/S23 (Conway's Game of Life in N dimensions) =#
 function cc(board, neighbours)
     life(board, neighbours, 6, (3,), (2,3))
 end
