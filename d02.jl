@@ -28,18 +28,18 @@ end
 t = get_data("i02t0")
 inp = get_data("i02")
 
-Test.@test valid(t) == 2
+Test.@test valid(t) === 2
 
 @time a = valid(inp)
 println(a)
-Test.@test a == 467
+Test.@test a === 467
 
 function valid2(data)
-    count(c -> xor(c["pas"][c["low"]] == c["ltr"], c["pas"][c["upp"]] == c["ltr"]), data)
+    count(c -> xor(c["pas"][c["low"]] === c["ltr"], c["pas"][c["upp"]] === c["ltr"]), data)
 end
 
-Test.@test valid2(t) == 1
+Test.@test valid2(t) === 1
 
 @time b = valid2(inp)
 println(b)
-Test.@test b == 441
+Test.@test b === 441

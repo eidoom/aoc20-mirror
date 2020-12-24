@@ -15,9 +15,13 @@ Using [Julia](https://julialang.org/) ([also](https://en.wikipedia.org/wiki/Juli
 
 Warm up
 
+* I used `UInt`s, but it seems Julia [expects](https://docs.julialang.org/en/v1/manual/integers-and-floating-point-numbers/#Integers) one to just use `Int`s for any decimal integers, signed or otherwise.
+
 ### [2 Password Philosophy](https://adventofcode.com/2020/day/2)
 
 Strict [parser](https://en.wikipedia.org/wiki/Parsing#Computer_languages)
+
+* [xor](https://en.wikipedia.org/wiki/Exclusive_or)
 
 ### [3 Toboggan Trajectory](https://adventofcode.com/2020/day/3)
 
@@ -100,9 +104,6 @@ Cellular automata: B3/S23 (Conway's Game of Life) in 3 and 4 dimensions
 [Recursive decent parser](https://en.wikipedia.org/wiki/Recursive_descent_parser) for ficticious arithmetic
 
 * Consider [shunting-yard algorithm](https://en.wikipedia.org/wiki/Shunting-yard_algorithm)
-* Type annotations (`@time` part two)
-    * Before `0.002661 seconds (32.86 k allocations: 2.790 MiB)`
-    * After `0.001234 seconds (20.84 k allocations: 2.629 MiB)`
 
 ### [19 Monster Messages](https://adventofcode.com/190190/day/19)
 
@@ -145,7 +146,7 @@ Data structures
 
 * I used a circular singly linked list implemented on a (contiguous memory) array. The starting position is not recorded in the "container" (it's a circle). Each element has value given by index and next value in list given by entry.
 
-### [24](https://adventofcode.com/240240/day/24)
+### [24 Lobby Layout](https://adventofcode.com/240240/day/24)
 
 Hexagonal B2/S12 cellular automaton.
 

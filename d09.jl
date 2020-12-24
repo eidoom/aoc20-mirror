@@ -5,7 +5,7 @@ import Test
 include("./com.jl")
 
 function read_file(name)
-    map(n -> parse(Int, n), Com.file_lines(name))
+    parse.(Int, Com.file_lines(name))
 end
 
 function weakness1(data, preamble)

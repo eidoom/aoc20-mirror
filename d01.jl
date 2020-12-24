@@ -4,14 +4,14 @@ import Test
 
 include("./com.jl")
 
-function get_data(name)
-    map(b -> parse(UInt, b), Com.file_lines(name))
+function get_data(name::String)::Vector{UInt}
+    parse.(UInt, Com.file_lines(name))
 end
 
-function find(target, nums)
+function find(target::UInt, nums::Vector{UInt})::UInt
     for i in nums
         for j in nums
-            if i + j == target
+            if i + j === target
                 return i * j
             end
         end
@@ -21,17 +21,17 @@ end
 t = get_data("i01t0")
 inp = get_data("i01")
 
-Test.@test find(2020, t) == 514579
+Test.@test find(UInt(2020), t) === UInt(514579)
 
-@time a = find(2020, inp)
+@time a = find(UInt(2020), inp)
 println(a)
-Test.@test a == 73371
+Test.@test a === UInt(73371)
 
-function find2(target, nums)
+function find2(target::UInt, nums::Vector{UInt})::UInt
     for i in nums
         for j in nums
             for k in nums
-                if i + j + k == target
+                if i + j + k === target
                     return i * j * k
                 end
             end
@@ -39,8 +39,8 @@ function find2(target, nums)
     end
 end
 
-Test.@test find2(2020, t) == 241861950
+Test.@test find2(UInt(2020), t) === UInt(241861950)
 
-@time b = find2(2020, inp)
+@time b = find2(UInt(2020), inp)
 println(b)
-Test.@test b == 127642310
+Test.@test b === UInt(127642310)
