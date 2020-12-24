@@ -93,6 +93,7 @@ The naivest brute force is factorial time, so you have to think of a moderately 
 Cellular automata: B3/S23 (Conway's Game of Life) in 3 and 4 dimensions
 
 * Implemented this one with [hash](https://en.wikipedia.org/wiki/Hash_table) sets for a change
+* [Moore neighbourhood](https://en.wikipedia.org/wiki/Moore_neighborhood)
 
 ### [18 Operation Order](https://adventofcode.com/180180/day/18)
 
@@ -145,6 +146,8 @@ Data structures
 * I used a circular singly linked list implemented on a (contiguous memory) array. The starting position is not recorded in the "container" (it's a circle). Each element has value given by index and next value in list given by entry.
 
 ### [24](https://adventofcode.com/240240/day/24)
+
+Hexagonal B2/S12 cellular automaton.
 
 ### [25](https://adventofcode.com/250250/day/25)
 

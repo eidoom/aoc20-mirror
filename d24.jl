@@ -12,7 +12,7 @@ function read_file(name)
 end
 
 function seed(data)
-    # white: not in set (default), black: in set
+    # white: not in set/dead (default), black: in set/alive
     hexmap::Set{Tuple{Int,Int}} = Set()
     for line in data
         pos = (0, 0)
@@ -56,15 +56,16 @@ println(a)
 Test.@test a === 382
 
 #= B2/S12 on hexagonal lattice =#
+#= This is straight out of day 17 =#
 function life(board, neighbours, days)
     for _ = 1:days
         prev = deepcopy(board)
         board = Set{Tuple}()
-        for on in prev
-            if count(dir -> on .+ dir in prev, neighbours) in 1:2
-                push!(board, on)
+        for alive in prev
+            if count(dir -> alive .+ dir in prev, neighbours) in (1, 2)
+                push!(board, alive)
             end
-            for pos in map(dir -> on .+ dir, neighbours)
+            for pos in map(dir -> alive .+ dir, neighbours)
                 if !(pos in prev) && count(dir -> pos .+ dir in prev, neighbours) === 2
                     push!(board, pos)
                 end
@@ -80,9 +81,8 @@ function two(hexmap)
     life(hexmap, dirs, 100)
 end
 
-println(two(init_t))
-#= Test.@test two(t0) === 0 =#
+Test.@test two(init_t) === 2208
 
 @time b = two(init)
 println(b)
-#= Test.@test b === 0 =#
+Test.@test b === 3964
