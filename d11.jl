@@ -4,10 +4,6 @@ import Test
 
 include("./com.jl")
 
-function read_file(name::String)::Array{Char,2}
-    hcat(collect.(Com.file_lines(name))...)
-end
-
 function seats1(data::Array{Char,2})::Int
     new = copy(data)
     h, w = size(new)
@@ -114,8 +110,8 @@ function seats1(data::Array{Char,2})::Int
     c
 end
 
-t = read_file("i11t0")
-@time inp = read_file("i11")
+t = Com.file_2d("i11t0")
+@time inp = Com.file_2d("i11")
 
 Test.@test seats1(t) === 37
 
