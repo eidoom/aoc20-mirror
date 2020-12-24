@@ -7,7 +7,6 @@
 Using [Julia](https://julialang.org/) ([also](https://en.wikipedia.org/wiki/Julia_(programming_language))).
 
 * [Docs](https://docs.julialang.org/)
-* [Handy cheatsheet](https://juliabyexample.helpmanual.io/)
 
 ## Days
 
