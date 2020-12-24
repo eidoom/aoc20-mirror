@@ -11,9 +11,9 @@ function read_file(name)
     )
 end
 
-function one(data)
-    # white: false (default), black: true
-    hexmap::Dict{Tuple{Int,Int},Bool} = Dict()
+function seed(data)
+    # white: not in set (default), black: in set
+    hexmap::Set{Tuple{Int,Int}} = Set()
     for line in data
         pos = (0, 0)
         for dir in line
@@ -31,31 +31,58 @@ function one(data)
                 pos = pos .+ (1, -1)
             end
         end
-        if haskey(hexmap, pos)
-            hexmap[pos] = !hexmap[pos]
+        if pos in hexmap
+            setdiff!(hexmap, [pos])
         else
-            hexmap[pos] = true
+            push!(hexmap, pos)
         end
     end
-    count(values(hexmap))
+    hexmap
+end
+
+function one(hexmap)
+    length(hexmap)
 end
 
 t0 = read_file("i24t0")
 @time inp = read_file("i24")
+init_t = seed(t0)
+@time init = seed(inp)
 
-Test.@test one(t0) === 10
+Test.@test one(init_t) === 10
 
-@time a = one(inp)
+@time a = one(init)
 println(a)
 Test.@test a === 382
 
-#= function two(data) =#
-#=     data =#
-#= end =#
+#= B2/S12 on hexagonal lattice =#
+function life(board, neighbours, days)
+    for _ = 1:days
+        prev = deepcopy(board)
+        board = Set{Tuple}()
+        for on in prev
+            if count(dir -> on .+ dir in prev, neighbours) in 1:2
+                push!(board, on)
+            end
+            for pos in map(dir -> on .+ dir, neighbours)
+                if !(pos in prev) && count(dir -> pos .+ dir in prev, neighbours) === 2
+                    push!(board, pos)
+                end
 
-#= println(two(t0)) =#
+            end
+        end
+    end
+    length(board)
+end
+
+function two(hexmap)
+    dirs = [(-1, 1), (1, -1), (-1, 0), (1, 0), (0, 1), (0, -1)]
+    life(hexmap, dirs, 100)
+end
+
+println(two(init_t))
 #= Test.@test two(t0) === 0 =#
 
-#= @time b = two(inp) =#
-#= println(b) =#
+@time b = two(init)
+println(b)
 #= Test.@test b === 0 =#
