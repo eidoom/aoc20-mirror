@@ -5,7 +5,7 @@ import Test
 include("./com.jl")
 
 function read_file(name::String)::Array{Char,2}
-    permutedims(hcat(collect.(Com.file_lines(name))...))
+    hcat(collect.(Com.file_lines(name))...)
 end
 
 function seats1(data::Array{Char,2})::Int
@@ -115,7 +115,6 @@ function seats1(data::Array{Char,2})::Int
 end
 
 t = read_file("i11t0")
-#= display(t) =#
 @time inp = read_file("i11")
 
 Test.@test seats1(t) === 37
@@ -124,11 +123,11 @@ Test.@test seats1(t) === 37
 println(a)
 Test.@test a === 2126
 
-function ray(data::Array{Char,2}, i::Int, j::Int, di::Int, dj::Int, h::Int, w::Int)::Bool
+function ray(data::Array{Char,2}, i::Int, j::Int, di::Int, dj::Int)::Bool
     while true
         i += di
         j += dj
-        if !(1 <= i <= h && 1 <= j <= w) || data[i, j] === 'L'
+        if !(1 <= i <= size(data, 1) && 1 <= j <= size(data, 2)) || data[i, j] === 'L'
             return false
         elseif data[i, j] === '#'
             return true
@@ -138,7 +137,6 @@ end
 
 function seats2(d::Array{Char,2})::Int
     new = copy(d)
-    h, w = size(new)
     c = 1
     new_c = 0
     dirs = ((-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1))
@@ -148,11 +146,11 @@ function seats2(d::Array{Char,2})::Int
         for i in axes(new, 1)
             for j in axes(new, 2)
                 if data[i, j] === 'L'
-                    if !any(dir -> ray(data, i, j, dir..., h, w), dirs)
+                    if !any(dir -> ray(data, i, j, dir...), dirs)
                         new[i, j] = '#'
                     end
                 elseif data[i, j] === '#'
-                    if count(dir -> ray(data, i, j, dir..., h, w), dirs) >= 5
+                    if count(dir -> ray(data, i, j, dir...), dirs) >= 5
                         new[i, j] = 'L'
                     end
                 end
