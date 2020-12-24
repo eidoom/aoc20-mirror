@@ -4,11 +4,11 @@ import Test
 
 include("./com.jl")
 
-function read_file(name)
+function read_file(name::String)::Array{Char,2}
     permutedims(hcat(collect.(Com.file_lines(name))...))
 end
 
-function seats1(data)
+function seats1(data::Array{Char,2})::Int
     new = copy(data)
     h, w = size(new)
     c = 1
@@ -115,8 +115,8 @@ function seats1(data)
 end
 
 t = read_file("i11t0")
+#= display(t) =#
 @time inp = read_file("i11")
-#= println(t) =#
 
 Test.@test seats1(t) === 37
 
@@ -124,7 +124,7 @@ Test.@test seats1(t) === 37
 println(a)
 Test.@test a === 2126
 
-function ray(data, i, j, di, dj, h, w)
+function ray(data::Array{Char,2}, i::Int, j::Int, di::Int, dj::Int, h::Int, w::Int)::Bool
     while true
         i += di
         j += dj
@@ -143,7 +143,7 @@ end
 #=     println() =#
 #= end =#
 
-function seats2(d)
+function seats2(d::Array{Char,2})::Int
     new = copy(d)
     h, w = size(new)
     c = 1
