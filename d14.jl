@@ -12,7 +12,7 @@ function read_file(name)
         if p === nothing
             push!(init, (op, val))
         else
-            push!(init, map(i -> parse(Int32, i), (p.captures[1], val)))
+            push!(init, parse.(Int32, (p.captures[1], val)))
         end
     end
     init
@@ -28,11 +28,11 @@ function emulator1(prog)
             bin = "0000" * bitstring(val)
             res = 0
             for i = 1:36
-                if mask[i] == '1'
+                if mask[i] === '1'
                     res += 1 << (36 - i)
-                elseif mask[i] == '0'
+                elseif mask[i] === '0'
                     continue
-                elseif bin[i] == '1'
+                elseif bin[i] === '1'
                     res += 1 << (36 - i)
                 end
             end
@@ -45,16 +45,16 @@ end
 t = read_file("i14t0")
 inp = read_file("i14")
 
-Test.@test emulator1(t) == 165
+Test.@test emulator1(t) === 165
 
 @time a = emulator1(inp)
 println(a)
-Test.@test a == 6559449933360
+Test.@test a === 6559449933360
 
 function all(res, arr, ii = 1)
     res = deepcopy(res)
     for i = ii:36
-        if res[i] == 'X'
+        if res[i] === 'X'
             res[i] = '0'
             all(res, arr, i + 1)
             res[i] = '1'
@@ -68,7 +68,7 @@ end
 function bin2dec(bin)
     dec = 0
     for i = 1:36
-        if bin[i] == '1'
+        if bin[i] === '1'
             dec += 1 << (36 - i)
         end
     end
@@ -91,7 +91,7 @@ function emulator2(prog)
             mask = val
         else
             add = dec2bin(op)
-            res = [(m == '1' || m == 'X') ? m : a for (a, m) in zip(add, mask)]
+            res = [(m === '1' || m === 'X') ? m : a for (a, m) in zip(add, mask)]
             arr = []
             all(res, arr)
             for r in arr
@@ -104,8 +104,8 @@ end
 
 t1 = read_file("i14t1")
 println(emulator2(t1))
-Test.@test emulator2(t1) == 208
+Test.@test emulator2(t1) === 208
 
 @time b = emulator2(inp)
 println(b)
-Test.@test b == 3369767240513
+Test.@test b === 3369767240513

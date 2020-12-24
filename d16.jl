@@ -10,7 +10,7 @@ function read_rules(data)
         m = match(r"^([\w ]+): (\d+)-(\d+) or (\d+)-(\d+)$", d)
         if m !== nothing
             rules[m.captures[1]] = map(
-                j -> map(i -> parse(Int, i), map(k -> m.captures[j + k], (0, 1))),
+                j -> parse.(Int, map(k -> m.captures[j + k], (0, 1))),
                 (2, 4),
             )
         end
@@ -19,7 +19,7 @@ function read_rules(data)
 end
 
 function read_tickets(data)
-    map(line -> map(n -> parse(Int, n), split(line, ",")), data[2:end])
+    map(line -> parse.(Int, split(line, ",")), data[2:end])
 end
 
 function read_file(name)

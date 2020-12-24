@@ -67,6 +67,8 @@ Loops
 
 [Manhattan/taxicab geometry](https://en.wikipedia.org/wiki/Taxicab_geometry)
 
+* [Rotation matrix](https://en.wikipedia.org/wiki/Rotation_matrix)
+
 ### [13 Shuttle Search](https://adventofcode.com/130130/day/13)
 
 Number theory

@@ -24,7 +24,7 @@ function dist1(navs)
             facing = to_dir[mod(to_deg[facing] + (act === 'R' ? 1 : -1) * val, 360)]
         end
     end
-    sum(map(i -> abs(i), ship))
+    sum(abs.(ship))
 end
 
 t = read_file("i12t0")
@@ -54,7 +54,7 @@ function dist2(navs)
                 [Int(x * cosd(val) - y * sind(val)), Int(x * sind(val) + y * cosd(val))]
         end
     end
-    sum(map(i -> abs(i), ship))
+    sum(abs.(ship))
 end
 
 #= # slow =#

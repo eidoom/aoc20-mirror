@@ -4,12 +4,12 @@ import Test
 
 include("./com.jl")
 
-function read_file(name::String)::Array{Int,1}
-    map(i::SubString -> parse(Int, i), split(Com.file_slurp(name), ","))
+function read_file(name::String)::Vector{Int}
+    parse.(Int, split(Com.file_slurp(name), ","))
 end
 
 #= using an array =#
-function game0(spoken::Array{Int,1}, nth::Int)::Int
+function game0(spoken::Vector{Int}, nth::Int)::Int
     while length(spoken) < nth
         index::Union{Int,Nothing} =
             findlast(i::Int -> i === last(spoken), spoken[1:(end - 1)])
@@ -19,8 +19,8 @@ function game0(spoken::Array{Int,1}, nth::Int)::Int
 end
 
 #= using a dictionary =#
-function game(spoken::Array{Int,1}, nth::Int)::Int
-    record = Dict{Int,Array{Int,1}}(s => [i] for (i, s) in enumerate(spoken))
+function game(spoken::Vector{Int}, nth::Int)::Int
+    record = Dict{Int,Vector{Int}}(s => [i] for (i, s) in enumerate(spoken))
     sizehint!(record, nth)
     cur = last(spoken)
     for i = (length(spoken) + 1):nth
