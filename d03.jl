@@ -5,21 +5,19 @@ import Test
 include("./com.jl")
 
 function trees(data, di, dj)
-    r = length(first(data))
     j = 1
     t = 0
-    for i = 1:di:length(data)
-        if data[i][j] === '#'
+    for i = 1:di:size(data, 1)
+        if data[i, j] === '#'
             t += 1
         end
-        j = mod(j + dj, 1:r)
+        j = mod(j + dj, 1:size(data, 2))
     end
     t
 end
 
-t = Com.file_lines("i03t0")
-display(t)
-@time inp = Com.file_lines("i03")
+t = Com.file_2d("i03t0")
+@time inp = Com.file_2d("i03")
 
 Test.@test trees(t, 1, 3) === 7
 

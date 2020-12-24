@@ -12,7 +12,7 @@ function file_lines(name::String)::Vector{String}
 end
 
 function file_2d(name::String)::Array{Char,2}
-    hcat(collect.(file_lines(name))...)
+    permutedims(hcat(collect.(file_lines(name))...))
 end
 
 function file_slurp(name::String)::SubString
