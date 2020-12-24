@@ -6,28 +6,31 @@ include("./com.jl")
 
 @enum Edge top right bottom left flip_top flip_right flip_bottom flip_left
 
+const Image = BitArray{2}
+const Coord = NTuple{2,Int}
+
 struct Tile
     num::Int
-    image::BitArray{2}
+    image::Image
 end
 
-function side_left(tile::BitArray{2})::BitArray{1}
+function side_left(tile::Image)::BitArray{1}
     tile[:, 1]
 end
 
-function side_right(tile::BitArray{2})::BitArray{1}
+function side_right(tile::Image)::BitArray{1}
     tile[:, end]
 end
 
-function side_top(tile::BitArray{2})::BitArray{1}
+function side_top(tile::Image)::BitArray{1}
     tile[1, :]
 end
 
-function side_bottom(tile::BitArray{2})::BitArray{1}
+function side_bottom(tile::Image)::BitArray{1}
     tile[end, :]
 end
 
-function side(tile::BitArray{2}, edge::Edge)::BitArray{1}
+function side(tile::Image, edge::Edge)::BitArray{1}
     if edge === top
         side_top(tile)
     elseif edge === right
@@ -80,31 +83,31 @@ function one(data::Vector{Tile})::Int
     res
 end
 
-function vflip(image::BitArray{2})::BitArray{2}
+function vflip(image::Image)::Image
     image[end:-1:1, :]
 end
 
-function hflip(image::BitArray{2})::BitArray{2}
+function hflip(image::Image)::Image
     image[:, end:-1:1]
 end
 
-function hvflip(image::BitArray{2})::BitArray{2}
+function hvflip(image::Image)::Image
     image[end:-1:1, end:-1:1]
 end
 
-function trans(image::BitArray{2})::BitArray{2}
+function trans(image::Image)::Image
     permutedims(image, (2, 1))
 end
 
-function rot_cw(image::BitArray{2})::BitArray{2}
+function rot_cw(image::Image)::Image
     hflip(trans(image))
 end
 
-function rot_acw(image::BitArray{2})::BitArray{2}
+function rot_acw(image::Image)::Image
     vflip(trans(image))
 end
 
-function align(edge1::Edge, edge2::Edge, image::BitArray{2})::BitArray{2}
+function align(edge1::Edge, edge2::Edge, image::Image)::Image
     if edge1 === top
         if edge2 === top
             image |> vflip
@@ -180,7 +183,7 @@ function align(edge1::Edge, edge2::Edge, image::BitArray{2})::BitArray{2}
     end
 end
 
-function show_image(image::BitArray{2})
+function show_image(image::Image)
     for i in axes(image, 1)
         for j in axes(image, 2)
             print(image[i, j] ? '#' : '.')
@@ -190,7 +193,7 @@ function show_image(image::BitArray{2})
     println()
 end
 
-function deborder(image::BitArray{2})::BitArray{2}
+function deborder(image::Image)::Image
     image[2:(end - 1), 2:(end - 1)]
 end
 
@@ -206,7 +209,7 @@ middle = (0, 5, 6, 11, 12, 17, 18, 19)
 lower = (1, 4, 7, 10, 13, 16)
 weight = 15
 
-function find_nessie(final::BitArray{2})::Int
+function find_nessie(final::Image)::Int
     found::Bool = false
     count::Int = 0
     for _ = 1:2  # flips
@@ -232,10 +235,10 @@ end
 
 function proper(data::Vector{Tile})::Int
     len = Int(sqrt(length(data)))
-    image = Array{BitArray{2},2}(undef, len, len)
+    image = Array{Image,2}(undef, len, len)
     done::Vector{Int} = Int[]
     c1 = undef
-    p1::NTuple{2,Int} = (1, 1)
+    p1::Coord = (1, 1)
     for tile1 in data
         count::Int = 0
         edges::Vector{Tuple{Edge,Edge}} = []
@@ -252,15 +255,15 @@ function proper(data::Vector{Tile})::Int
             break
         end
     end
-    stack::Vector{Tuple{NTuple{2,Int},BitArray{2}}} = [(p1, c1)]
+    stack::Vector{Tuple{Coord,Image}} = [(p1, c1)]
     while length(stack) !== 0
-        pos::NTuple{2,Int}, cur::BitArray{2} = pop!(stack)
+        pos::Coord, cur::Image = pop!(stack)
         for tile::Tile in data
             if !(tile.num in done)
                 for edge1::Edge in instances(Edge)[1:4], edge2::Edge in instances(Edge)
                     if side(cur, edge1) == side(tile.image, edge2)
                         if edge1 === right
-                            npos = pos .+ (0, 1)
+                            npos::Coord = pos .+ (0, 1)
                         elseif edge1 === left
                             npos = pos .+ (0, -1)
                         elseif edge1 === top
@@ -268,7 +271,7 @@ function proper(data::Vector{Tile})::Int
                         elseif edge1 === bottom
                             npos = pos .+ (1, 0)
                         end
-                        new::BitArray{2} = align(edge1, edge2, tile.image)
+                        new::Image = align(edge1, edge2, tile.image)
                         image[npos...] = deborder(new)
                         push!(done, tile.num)
                         push!(stack, (npos, new))
@@ -278,7 +281,7 @@ function proper(data::Vector{Tile})::Int
             end
         end
     end
-    final::BitArray{2} = hvcat(Tuple(fill(len, len)), permutedims(image)...)
+    final::Image = hvcat(Tuple(fill(len, len)), permutedims(image)...)
     sightings::Int = find_nessie(final)
 
     count(final) - sightings * weight
