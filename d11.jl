@@ -165,7 +165,7 @@ function seats2(d::Array{Char,2})::Int
                 end
             end
         end
-        new_c = count(p -> p === '#', Iterators.flatten(new))
+        new_c = count(p -> p === '#', new)
     end
     c
 end
