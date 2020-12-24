@@ -31,11 +31,11 @@ t = read_file("i12t0")
 inp = read_file("i12")
 
 println(dist1(t))
-Test.@test dist1(t) == 25
+Test.@test dist1(t) === 25
 
 @time a = dist1(inp)
 println(a)
-Test.@test a == 904
+Test.@test a === 904
 
 function dist2(navs)
     waypoint = [10, 1]  # EN
@@ -78,8 +78,8 @@ end
 #= end =#
 
 println(dist2(t))
-Test.@test dist2(t) == 286
+Test.@test dist2(t) === 286
 
 @time b = dist2(inp)
 println(b)
-Test.@test b == 18747
+Test.@test b === 18747

@@ -5,11 +5,11 @@ import Test
 include("./com.jl")
 include("./nacci.jl")
 
-function read_file(name)::Array{Int,1}
-    sort(map(x -> parse(Int, x), Com.file_lines(name)))
+function read_file(name)::Vector{Int}
+    sort(parse.(Int, Com.file_lines(name)))
 end
 
-function jolts(data::Array{Int,1})::Int
+function jolts(data::Vector{Int})::Int
     one::Int = data[1] === 1 ? 1 : 0
     three::Int = 1 + (data[1] === 3 ? 1 : 0)
     for i::Int = 2:length(data)
@@ -33,7 +33,7 @@ Test.@test jolts(t1) === 220
 println(a)
 Test.@test a === 2312
 
-function arrangements(data::Array{Int,1})::Int
+function arrangements(data::Vector{Int})::Int
     cache::Vector{Int} = [1, 2, 4]
     pushfirst!(data, 0)
     count::Int = 0

@@ -5,8 +5,7 @@ import Test
 include("./com.jl")
 
 function read_file(name)
-    a = map(line -> split(line), Com.file_lines(name))
-    [[c, parse(Int, n)] for (c, n) in a]
+    [[c, parse(Int, n)] for (c, n) in split.(Com.file_lines(name))]
 end
 
 function interpret(data)
@@ -39,11 +38,11 @@ end
 t = read_file("i08t0")
 inp = read_file("i08")
 
-Test.@test run1(t) == 5
+Test.@test run1(t) === 5
 
 @time a = run1(inp)
 println(a)
-Test.@test a == 1331
+Test.@test a === 1331
 
 function run2(d)
     for k = 1:length(d)
@@ -58,8 +57,8 @@ function run2(d)
     end
 end
 
-Test.@test run2(t) == 8
+Test.@test run2(t) === 8
 
 @time b = run2(inp)
 println(b)
-Test.@test b == 1121
+Test.@test b === 1121

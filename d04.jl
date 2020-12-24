@@ -19,11 +19,11 @@ end
 dt = parse_file("i04t0")
 d = parse_file("i04")
 
-Test.@test valid(dt) == 2
+Test.@test valid(dt) === 2
 
 @time a = valid(d)
 println(a)
-Test.@test a == 226
+Test.@test a === 226
 
 function strict(data)
     count(
@@ -43,24 +43,24 @@ function strict(data)
                     pp["hgt"][(end - 1):end] == "in" &&
                     59 <= parse(UInt, pp["hgt"][1:(end - 2)]) <= 76
                 ),
-                length(pp["hcl"]) == 7 &&
-                    pp["hcl"][1] == '#' &&
+                length(pp["hcl"]) === 7 &&
+                    pp["hcl"][1] === '#' &&
                     occursin(r"[a-f\d]{6}", pp["hcl"][2:7]),
                 pp["ecl"] in ["amb" "blu" "brn" "gry" "grn" "hzl" "oth"],
-                length(pp["pid"]) == 9,
+                length(pp["pid"]) === 9,
             ]),
         data,
     )
 end
 
-Test.@test strict(dt) == 2
+Test.@test strict(dt) === 2
 
 dt2 = parse_file("i04t2")
-Test.@test strict(dt2) == 4
+Test.@test strict(dt2) === 4
 
 dt1 = parse_file("i04t1")
-Test.@test strict(dt1) == 0
+Test.@test strict(dt1) === 0
 
 @time b = strict(d)
 println(b)
-Test.@test b == 160
+Test.@test b === 160

@@ -78,11 +78,11 @@ end
 t0 = build("i07t0")
 @time inp = build("i07")
 
-Test.@test search_up(t0...) == 4
+Test.@test search_up(t0...) === 4
 
 @time a = search_up(inp...)
 println(a)
-Test.@test a == 185
+Test.@test a === 185
 
 function search_down(mat, start)
     #= iterative DFS, traverse graph downwards =#
@@ -103,11 +103,11 @@ function search_down(mat, start)
     tot - 1
 end
 
-Test.@test search_down(t0...) == 32
+Test.@test search_down(t0...) === 32
 
 t1 = build("i07t1")
-Test.@test search_down(t1...) == 126
+Test.@test search_down(t1...) === 126
 
 @time b = search_down(inp...)
 println(b)
-Test.@test b == 89084
+Test.@test b === 89084

@@ -51,6 +51,8 @@ Strict parser
 
 ### [9 Encoding Error](https://adventofcode.com/2020/day/9)
 
+Loops
+
 ### [10 Adapter Array](https://adventofcode.com/100100/day/10)
 
 [Tribonacci sequence](https://oeis.org/A000073)

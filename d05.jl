@@ -25,16 +25,16 @@ end
 
 inp = Com.file_lines("i05")
 
-Test.@test id(t[1]) == 357
-Test.@test id(t[2]) == 567
-Test.@test id(t[3]) == 119
-Test.@test id(t[4]) == 820
+Test.@test id(t[1]) === 357
+Test.@test id(t[2]) === 567
+Test.@test id(t[3]) === 119
+Test.@test id(t[4]) === 820
 
-ids = map(s -> id(s), inp)
+ids = id.(inp)
 
 @time a = maximum(ids)
 println(a)
-Test.@test a == 994
+Test.@test a === 994
 
 function mine(data)
     l = sort(data)
@@ -50,4 +50,4 @@ end
 
 @time b = mine(ids)
 println(b)
-Test.@test b == 741
+Test.@test b === 741
