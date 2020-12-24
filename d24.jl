@@ -29,17 +29,17 @@ function seed(data::Vector{Vector{String}})::Set{NTuple{2,Int}}
         pos = (0, 0)
         for dir in line
             #= pos = pos .+ dirs[dir] =#
-            if dir == "w"
+            if dir === "w"
                 pos = pos .+ (0, -1)
-            elseif dir == "e"
+            elseif dir === "e"
                 pos = pos .+ (0, 1)
-            elseif dir == "ne"
+            elseif dir === "ne"
                 pos = pos .+ (-1, 1)
-            elseif dir == "nw"
+            elseif dir === "nw"
                 pos = pos .+ (-1, 0)
-            elseif dir == "se"
+            elseif dir === "se"
                 pos = pos .+ (1, 0)
-            elseif dir == "sw"
+            elseif dir === "sw"
                 pos = pos .+ (1, -1)
             end
         end
