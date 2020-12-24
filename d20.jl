@@ -11,23 +11,23 @@ struct Tile
     image::BitArray{2}
 end
 
-function side_left(tile::Tile)::BitArray{1}
-    tile.image[:, 1]
+function side_left(tile::BitArray{2})::BitArray{1}
+    tile[:, 1]
 end
 
-function side_right(tile::Tile)::BitArray{1}
-    tile.image[:, end]
+function side_right(tile::BitArray{2})::BitArray{1}
+    tile[:, end]
 end
 
-function side_top(tile::Tile)::BitArray{1}
-    tile.image[1, :]
+function side_top(tile::BitArray{2})::BitArray{1}
+    tile[1, :]
 end
 
-function side_bottom(tile::Tile)::BitArray{1}
-    tile.image[end, :]
+function side_bottom(tile::BitArray{2})::BitArray{1}
+    tile[end, :]
 end
 
-function side(tile::Tile, edge::Edge)::BitArray{1}
+function side(tile::BitArray{2}, edge::Edge)::BitArray{1}
     if edge === top
         side_top(tile)
     elseif edge === right
@@ -69,7 +69,7 @@ function one(data::Vector{Tile})::Int
     for tile1::Tile in data
         # don't flip first tile
         if count(
-            tile1 !== tile2 && side(tile1, edge1) == side(tile2, edge2)
+            tile1 !== tile2 && side(tile1.image, edge1) == side(tile2.image, edge2)
             for
             tile2::Tile in data,
             edge1::Edge in instances(Edge)[1:4], edge2::Edge in instances(Edge)
@@ -240,25 +240,25 @@ function proper(data::Vector{Tile})::Int
         count::Int = 0
         edges::Vector{Tuple{Edge,Edge}} = []
         for tile2 in data, edge1 in instances(Edge)[1:4], edge2 in instances(Edge)
-            if tile1 !== tile2 && side(tile1, edge1) == side(tile2, edge2)
+            if tile1 !== tile2 && side(tile1.image, edge1) == side(tile2.image, edge2)
                 count += 1
                 push!(edges, (edge1, edge2))
             end
         end
         if count === 2 && all(i -> edges[i][1] in (right, bottom), 1:2)
             image[p1...] = deborder(tile1.image)
-            c1 = tile1
+            c1 = tile1.image
             push!(done, tile1.num)
             break
         end
     end
-    stack::Vector{Tuple{NTuple{2,Int},Tile}} = [(p1, c1)]
+    stack::Vector{Tuple{NTuple{2,Int},BitArray{2}}} = [(p1, c1)]
     while length(stack) !== 0
-        pos, cur = pop!(stack)
+        pos::NTuple{2,Int}, cur::BitArray{2} = pop!(stack)
         for tile::Tile in data
             if !(tile.num in done)
                 for edge1::Edge in instances(Edge)[1:4], edge2::Edge in instances(Edge)
-                    if side(cur, edge1) == side(tile, edge2)
+                    if side(cur, edge1) == side(tile.image, edge2)
                         if edge1 === right
                             npos = pos .+ (0, 1)
                         elseif edge1 === left
@@ -271,7 +271,7 @@ function proper(data::Vector{Tile})::Int
                         new::BitArray{2} = align(edge1, edge2, tile.image)
                         image[npos...] = deborder(new)
                         push!(done, tile.num)
-                        push!(stack, (npos, Tile(tile.num, new)))
+                        push!(stack, (npos, new))
                         break
                     end
                 end
