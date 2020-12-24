@@ -3,6 +3,7 @@
 import Test
 
 include("./com.jl")
+include("./ca.jl")
 
 function read_file(name)
     map(line -> BitArray(state === '#' for state in line), Com.file_lines(name))
@@ -10,6 +11,7 @@ end
 
 #= B3/S23 (Conway's Game of Life in N D) =#
 function cc(board, neighbours)
+    #= life(board, neighbours, 6, (3,), (2,3)) =#
     for _ = 1:6
         prev = deepcopy(board)
         board = Set{Tuple}()

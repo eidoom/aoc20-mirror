@@ -3,6 +3,7 @@
 import Test
 
 include("./com.jl")
+include("./ca.jl")
 
 function read_file(name)
     map(
@@ -56,29 +57,9 @@ println(a)
 Test.@test a === 382
 
 #= B2/S12 on hexagonal lattice =#
-#= This is straight out of day 17 =#
-function life(board, neighbours, days)
-    for _ = 1:days
-        prev = deepcopy(board)
-        board = Set{Tuple}()
-        for alive in prev
-            if count(dir -> alive .+ dir in prev, neighbours) in (1, 2)
-                push!(board, alive)
-            end
-            for pos in map(dir -> alive .+ dir, neighbours)
-                if !(pos in prev) && count(dir -> pos .+ dir in prev, neighbours) === 2
-                    push!(board, pos)
-                end
-
-            end
-        end
-    end
-    length(board)
-end
-
 function two(hexmap)
     dirs = [(-1, 1), (1, -1), (-1, 0), (1, 0), (0, 1), (0, -1)]
-    life(hexmap, dirs, 100)
+    life(hexmap, dirs, 100, (2,), (1,2))
 end
 
 Test.@test two(init_t) === 2208
