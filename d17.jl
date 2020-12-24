@@ -11,23 +11,7 @@ end
 
 #= B3/S23 (Conway's Game of Life in N D) =#
 function cc(board, neighbours)
-    #= life(board, neighbours, 6, (3,), (2,3)) =#
-    for _ = 1:6
-        prev = deepcopy(board)
-        board = Set{Tuple}()
-        for on in prev
-            if count(dir -> on .+ dir in prev, neighbours) in 2:3
-                push!(board, on)
-            end
-            for pos in map(dir -> on .+ dir, neighbours)
-                if !(pos in prev) && count(dir -> pos .+ dir in prev, neighbours) === 3
-                    push!(board, pos)
-                end
-
-            end
-        end
-    end
-    length(board)
+    life(board, neighbours, 6, (3,), (2,3))
 end
 
 function one(data)
