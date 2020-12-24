@@ -23,7 +23,7 @@ function read_tickets(data)
 end
 
 function read_file(name)
-    rules, yours, nearby = map(sec -> split(sec, '\n'), split(Com.file_slurp(name), "\n\n"))
+    rules, yours, nearby = map(sec -> split(sec, '\n'), Com.file_paras(name))
     read_rules(rules), first(read_tickets(yours)), read_tickets(nearby)
 end
 

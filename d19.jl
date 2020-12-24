@@ -8,7 +8,7 @@ include("./com.jl")
 function read_file(
     name::String,
 )::Tuple{Vector{Vector{Vector{Union{Int,Char}}}},Vector{SubString}}
-    raw, mesgs = map(each -> split(each, '\n'), split(Com.file_slurp(name), "\n\n"))
+    raw, mesgs = split.(Com.file_paras(name), '\n')
     rules = Vector(undef, length(raw))
     for r in raw
         m = match(r"^(\d+): (.*)$", r)

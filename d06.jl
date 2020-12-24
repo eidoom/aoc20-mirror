@@ -5,7 +5,7 @@ import Test
 include("./com.jl")
 
 function read_file(name)
-    map(i -> split(i, '\n'), split(Com.file_slurp(name), "\n\n"))
+    split.(Com.file_paras(name), '\n')
 end
 
 function yes(data)

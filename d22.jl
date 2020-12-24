@@ -4,11 +4,8 @@ import Test
 
 include("./com.jl")
 
-function read_file(name::String)::Tuple{Vector{Int},Vector{Int}}
-    tuple(map(
-        player -> parse.(Int, split(player, '\n')[2:end]),
-        split(Com.file_slurp(name), "\n\n"),
-    )...)
+function read_file(name::String)::NTuple{2,Vector{Int}}
+    tuple(map(player -> parse.(Int, split(player, '\n')[2:end]), Com.file_paras(name))...)
 end
 
 #= seems to run pretty much the same =#
@@ -29,7 +26,7 @@ end
 #=     )) =#
 #= end =#
 
-function one(decks::Tuple{Vector{Int},Vector{Int}})::Int
+function one(decks::NTuple{2,Vector{Int}})::Int
     deck1, deck2 = deepcopy(decks)
     while all(deck -> length(deck) !== 0, [deck1, deck2])
         card1 = popfirst!(deck1)
@@ -55,7 +52,7 @@ Test.@test one(t0) === 306
 println(a)
 Test.@test a === 32472
 
-function two(decks::Tuple{Vector{Int},Vector{Int}}, g::Int = 1)::Tuple{Int,Vector{Int}}
+function two(decks::NTuple{2,Vector{Int}}, g::Int = 1)::Tuple{Int,Vector{Int}}
     @debug "=== Game $(g) ===\n"
     deck1, deck2 = deepcopy(decks)
     i::Int = 1
@@ -96,7 +93,7 @@ function two(decks::Tuple{Vector{Int},Vector{Int}}, g::Int = 1)::Tuple{Int,Vecto
     (winner, winner === 1 ? deck1 : deck2)
 end
 
-function game(decks::Tuple{Vector{Int},Vector{Int}})::Int
+function game(decks::NTuple{2,Vector{Int}})::Int
     global gg = 1
     winner, winning_deck = two(decks, gg)
     @debug "== Post-game results ==\nPlayer $(winner)'s deck: $(winning_deck)"

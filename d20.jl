@@ -63,7 +63,7 @@ function read_file(name::String)::Vector{Tile}
             ),
         )
         for
-        (num, tile) in map(para -> split(para, ":\n"), split(Com.file_slurp(name), "\n\n"))
+        (num, tile) in split.(Com.file_paras(name), ":\n")
     ]
 end
 

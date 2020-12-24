@@ -5,7 +5,7 @@ import Test
 include("./com.jl")
 
 function parse_file(name)
-    map(a -> Dict(map(b -> split(b, ":"), split(a))), split(Com.file_slurp(name), "\n\n"))
+    map(a -> Dict(split.(split(a), ":")), Com.file_paras(name))
 end
 
 function valid(data)
