@@ -22,9 +22,9 @@ end
 #=     "sw" => (1, -1), =#
 #= ) =#
 
-function seed(data::Vector{Vector{String}})::Set{NTuple{2,Int}}
+function seed(data::Vector{Vector{String}})::Set{Coord{2}}
     # white: not in set/dead (default), black: in set/alive
-    hexmap::Set{NTuple{2,Int}} = Set()
+    hexmap = Set{Coord{2}}()
     for line in data
         pos = (0, 0)
         for dir in line
@@ -52,7 +52,7 @@ function seed(data::Vector{Vector{String}})::Set{NTuple{2,Int}}
     hexmap
 end
 
-function one(hexmap::Set{NTuple{2,Int}})::Int
+function one(hexmap::Set{Coord{2}})::Int
     length(hexmap)
 end
 
@@ -71,7 +71,7 @@ println("Day 0: ", a)
 Test.@test a === 382
 
 #= B2/S12 on hexagonal lattice =#
-function two(hexmap::Set{NTuple{2,Int}})::Int
+function two(hexmap::Set{Coord{2}})::Int
     dirs = [(-1, 1), (1, -1), (-1, 0), (1, 0), (0, 1), (0, -1)]
     life(hexmap, dirs, 100, (2,), (1, 2))
 end
