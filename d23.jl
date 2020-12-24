@@ -75,20 +75,20 @@ function two(starter::Vector{Int})
     n::Int = length(circle)
     cur::Int = circle[end]
     for m = 1:moves
-        #= println("-- move $(m) --") =#
-        #= println("cups: $(show_ll(linked))")  # slowww =#
+        @debug "-- move $(m) --"
+        @debug "cups: $(show_ll(linked))"  # slowww
         cur = linked[cur]
-        #= println("current: $(cur)") =#
+        @debug "current: $(cur)"
         l1 = linked[cur]
         l2 = linked[l1]
         l3 = linked[l2]
-        #= println("pick up: $(l1), $(l2), $(l3)") =#
+        @debug "pick up: $(l1), $(l2), $(l3)"
         linked[cur] = linked[l3]
         dest = mod(cur - 1, 1:n)
         while dest in (l1, l2, l3)
             dest = mod(dest - 1, 1:n)
         end
-        #= println("destination: $(dest)") =#
+        @debug "destination: $(dest)"
         linked[l3] = linked[dest]
         linked[dest] = l1
     end
@@ -97,7 +97,6 @@ function two(starter::Vector{Int})
     e1 * e2
 end
 
-@time println(two(t0))
 Test.@test two(t0) === 149245887792
 
 @time b = two(inp)

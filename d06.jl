@@ -4,16 +4,12 @@ import Test
 
 include("./com.jl")
 
-function read_file(name)
-    split.(Com.file_paras(name), '\n')
-end
-
 function yes(data)
     sum(map(group -> length(Set(Iterators.flatten(group))), data))
 end
 
-t = read_file("i06t0")
-inp = read_file("i06")
+t = Com.file_sents("i06t0")
+inp = Com.file_sents("i06")
 
 Test.@test yes(t) == 11
 

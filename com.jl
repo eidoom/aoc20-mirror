@@ -3,6 +3,7 @@ export file_lines
 export file_2d
 export file_slurp
 export file_paras
+export file_sents
 
 function file_lines(name::String)::Vector{String}
     buf::Vector{String} = open(name, "r") do file
@@ -24,6 +25,10 @@ end
 
 function file_paras(name::String)::Vector{String}
     split(file_slurp(name), "\n\n")
+end
+
+function file_sents(name::String)::Vector{Vector{String}}
+    split.(file_paras(name), '\n')
 end
 
 end

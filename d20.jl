@@ -236,7 +236,7 @@ end
 function proper(data::Vector{Tile})::Int
     len = Int(sqrt(length(data)))
     image = Array{Image,2}(undef, len, len)
-    done::Vector{Int} = Int[]
+    done = Int[]
     c1 = undef
     p1::Coord = (1, 1)
     for tile1 in data

@@ -10,7 +10,7 @@ struct Recipe{T<:AbstractString}
 end
 
 function read_file(name::String)::Vector{Recipe}
-    res::Vector{Recipe} = []
+    res = Recipe[]
     for line in Com.file_lines(name)
         ing, aln = split(line[1:(end - 1)], " (contains ")
         push!(res, Recipe(split(ing), split(aln, ", ")))
@@ -19,8 +19,8 @@ function read_file(name::String)::Vector{Recipe}
 end
 
 function one(recipes::Vector{Recipe})::Tuple{Int,Set{SubString},Set{SubString}}
-    alns::Set{SubString} = Set()
-    ings::Set{SubString} = Set()
+    alns = Set{SubString}()
+    ings = Set{SubString}()
     for r in recipes
         for ing in r.ings
             push!(ings, ing)
@@ -29,7 +29,7 @@ function one(recipes::Vector{Recipe})::Tuple{Int,Set{SubString},Set{SubString}}
             push!(alns, aln)
         end
     end
-    cnts::Set{SubString} = Set()
+    cnts = Set{SubString}()
     for aln in alns
         cnt = deepcopy(ings)
         for r in recipes
@@ -49,14 +49,14 @@ t = read_file("i21t0")
 @time inp = read_file("i21")
 
 tc, ta, td = one(t)
-Test.@test tc == 5
+Test.@test tc === 5
 
 @time a, ia, id = one(inp)
 println(a)
-Test.@test a == 2374
+Test.@test a === 2374
 
 function two(recipes::Vector{Recipe}, alns::Set{SubString}, dan::Set{SubString})::String
-    pairs::Vector{Tuple{Set{SubString},SubString}} = []
+    pairs = Tuple{Set{SubString},SubString}[]
     for aln in alns
         cnt = deepcopy(dan)
         for r in recipes
@@ -66,10 +66,10 @@ function two(recipes::Vector{Recipe}, alns::Set{SubString}, dan::Set{SubString})
         end
         push!(pairs, (cnt, aln))
     end
-    sol::Vector{Tuple{SubString,SubString}} = []
-    while length(sol) != length(dan)
+    sol = Tuple{SubString,SubString}[]
+    while length(sol) !== length(dan)
         for (ings, aln) in pairs
-            if length(ings) == 1
+            if length(ings) === 1
                 ing = first(ings)
                 push!(sol, (ing, aln))
                 for a in eachindex(pairs)
@@ -78,7 +78,7 @@ function two(recipes::Vector{Recipe}, alns::Set{SubString}, dan::Set{SubString})
             end
         end
     end
-    join(map(j -> j[1], sort(sol, by = i -> i[2])), ",")
+    join(first.(sort(sol, by = i -> i[2])), ",")
 end
 
 Test.@test two(t, ta, td) == "mxmxvkd,sqjhc,fvjkl"

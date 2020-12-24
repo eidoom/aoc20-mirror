@@ -4,11 +4,14 @@ import Test
 
 include("./com.jl")
 
+#= An element of the grammar: a rule (Int) or a "word in the sentence"/"letter in the symbol" (Char) =#
+const Element = Union{Int,Char}
+
 #= rules are indexed by their position in the array =#
 function read_file(
     name::String,
-)::Tuple{Vector{Vector{Vector{Union{Int,Char}}}},Vector{SubString}}
-    raw, mesgs = split.(Com.file_paras(name), '\n')
+)::Tuple{Vector{Vector{Vector{Element}}},Vector{SubString}}
+    raw, mesgs = Com.file_sents(name)
     rules = Vector(undef, length(raw))
     for r in raw
         m = match(r"^(\d+): (.*)$", r)
@@ -29,7 +32,7 @@ end
 
 #= recursively generate all strings which are allowed by rules =#
 function builder(
-    rules::Vector{Vector{Vector{Union{Int,Char}}}},
+    rules::Vector{Vector{Vector{Element}}},
     i::Int = 1,
 )::Union{Char,Vector{Union{Char,String}}}
     rule = rules[i]
@@ -97,7 +100,7 @@ function builder(
 end
 
 #= count how many messages match the first rule by seeing if they're in the list of all possible messages =#
-function one(rules::Vector{Vector{Vector{Union{Int,Char}}}}, mesgs::Vector{SubString})::Int
+function one(rules::Vector{Vector{Vector{Element}}}, mesgs::Vector{SubString})::Int
     mesgs = Set(mesgs)
     allowed = builder(rules)
     length(intersect(mesgs, allowed))
@@ -124,7 +127,7 @@ Test.@test a === 224
 #=     in2 =#
 #= end =#
 
-function cyk_parse(rules::Vector{Vector{Vector{Union{Int,Char}}}}, symbol::SubString)::Bool
+function cyk_parse(rules::Vector{Vector{Vector{Element}}}, symbol::SubString)::Bool
     n = length(symbol)
 
     table::BitArray{3} = BitArray{3}(fill(false, (n, n, length(rules))))
@@ -165,7 +168,7 @@ end
 t2r, t2m = read_file("i19t2")
 Test.@test one(t2r, t2m) === 3
 
-function two(rules::Vector{Vector{Vector{Union{Int,Char}}}}, mesgs::Vector{SubString})::Int
+function two(rules::Vector{Vector{Vector{Element}}}, mesgs::Vector{SubString})::Int
     count(mesg -> cyk_parse(rules, mesg), mesgs)
 end
 

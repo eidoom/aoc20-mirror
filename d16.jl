@@ -10,7 +10,7 @@ const Ticket = Vector{Int}
 const Tickets = Vector{Ticket}
 const Fields = Vector{String}
 
-function read_rules(data::Vector{SubString{String}})::Rules
+function read_rules(data::Vector{String})::Rules
     rules = Rules()
     for d in data
         m = match(r"^([\w ]+): (\d+)-(\d+) or (\d+)-(\d+)$", d)
@@ -22,12 +22,12 @@ function read_rules(data::Vector{SubString{String}})::Rules
     rules
 end
 
-function read_tickets(data::Vector{SubString{String}})::Tickets
+function read_tickets(data::Vector{String})::Tickets
     map(line -> parse.(Int, split(line, ",")), data[2:end])
 end
 
 function read_file(name::String)::Tuple{Rules,Ticket,Tickets}
-    rules, yours, nearby = split.(Com.file_paras(name), '\n')
+    rules, yours, nearby = Com.file_sents(name)
     read_rules(rules), first(read_tickets(yours)), read_tickets(nearby)
 end
 
@@ -95,9 +95,7 @@ function ordering(pos::Vector{Fields})::Fields
 end
 
 #= look at tickets which contain only numbers that are valid by any field, then find the correct ordering of fields, then give product of departure fields =#
-function two(
-    data::Tuple{Rules,Ticket,Tickets},
-)::Iterators.Zip{Tuple{Fields,Vector{Int}}}
+function two(data::Tuple{Rules,Ticket,Tickets})::Iterators.Zip{Tuple{Fields,Vector{Int}}}
     rules, yours, nearby = data
     valid = filter(ticket -> all(n -> check_valid(rules, n), ticket), nearby)
     pos = possibilities(rules, valid)
