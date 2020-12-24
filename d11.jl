@@ -136,13 +136,6 @@ function ray(data::Array{Char,2}, i::Int, j::Int, di::Int, dj::Int, h::Int, w::I
     end
 end
 
-#= function show(data) =#
-#=     for l in data =#
-#=         println(join(l)) =#
-#=     end =#
-#=     println() =#
-#= end =#
-
 function seats2(d::Array{Char,2})::Int
     new = copy(d)
     h, w = size(new)
