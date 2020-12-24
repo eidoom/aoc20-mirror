@@ -1,7 +1,13 @@
 #!/usr/bin/env julia
 
-function life(state, neighbourhood, iterations, born, survive)
-    #= 
+function life(
+    state::Set{NTuple{N,Int}},
+    neighbourhood::Vector{NTuple{N,Int}},
+    iterations::Int,
+    born,
+    survive,
+)::Int where {N}
+    #=
     Runs a cellular automaton and returns number of alive states at end
     state: initial state
     neighbourhood: adjacent cells as lattice vectors

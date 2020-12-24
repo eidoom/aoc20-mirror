@@ -11,11 +11,13 @@ end
 
 #= 6 iterations of B3/S23 (Conway's Game of Life in N dimensions) =#
 function cc(board, neighbours)
-    life(board, neighbours, 6, (3,), (2,3))
+    life(board, neighbours, 6, (3,), (2, 3))
 end
 
 function one(data)
-    conway = Set{Tuple}((j, i, 0) for i = 1:length(data), j = 1:length(data[1]) if data[i][j])
+    conway = Set{NTuple{3,Int}}(
+        (j, i, 0) for i = 1:length(data), j = 1:length(data[1]) if data[i][j]
+    )
     dirs = [(a, b, c) for a = -1:1, b = -1:1, c = -1:1 if !all(i -> i === 0, (a, b, c))]  # 3d Moore neighbourhood
     cc(conway, dirs)
 end
@@ -30,8 +32,13 @@ println(a)
 Test.@test a == 218
 
 function two(data)
-    conway = Set{Tuple}((j, i, 0, 0) for i = 1:length(data), j = 1:length(data[1]) if data[i][j])
-    dirs = [(a, b, c, d) for a = -1:1, b = -1:1, c = -1:1, d = -1:1 if !all(i -> i === 0, (a, b, c, d))]  # 4d Moore neighbourhood
+    conway = Set{NTuple{4,Int}}(
+        (j, i, 0, 0) for i = 1:length(data), j = 1:length(data[1]) if data[i][j]
+    )
+    dirs = [
+        (a, b, c, d)
+        for a = -1:1, b = -1:1, c = -1:1, d = -1:1 if !all(i -> i === 0, (a, b, c, d))
+    ]  # 4d Moore neighbourhood
     cc(conway, dirs)
 end
 
