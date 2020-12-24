@@ -12,12 +12,23 @@ function read_file(name::String)::Vector{Vector{String}}
     )
 end
 
+#= This reads nicer but is 10x slower. I'll leave it in comments. =#
+#= dirs = Dict( =#
+#=     "w" => (0, -1), =#
+#=     "e" => (0, 1), =#
+#=     "ne" => (-1, 1), =#
+#=     "nw" => (-1, 0), =#
+#=     "se" => (1, 0), =#
+#=     "sw" => (1, -1), =#
+#= ) =#
+
 function seed(data::Vector{Vector{String}})::Set{NTuple{2,Int}}
     # white: not in set/dead (default), black: in set/alive
     hexmap::Set{NTuple{2,Int}} = Set()
     for line in data
         pos = (0, 0)
         for dir in line
+            #= pos = pos .+ dirs[dir] =#
             if dir == "w"
                 pos = pos .+ (0, -1)
             elseif dir == "e"
@@ -62,7 +73,7 @@ Test.@test a === 382
 #= B2/S12 on hexagonal lattice =#
 function two(hexmap::Set{NTuple{2,Int}})::Int
     dirs = [(-1, 1), (1, -1), (-1, 0), (1, 0), (0, 1), (0, -1)]
-    life(hexmap, dirs, 100, (2,), (1,2))
+    life(hexmap, dirs, 100, (2,), (1, 2))
 end
 
 Test.@test two(init_t) === 2208
