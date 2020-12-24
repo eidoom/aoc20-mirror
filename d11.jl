@@ -5,7 +5,7 @@ import Test
 include("./com.jl")
 
 function read_file(name)
-    map(line -> collect(line), Com.file_lines(name))
+    collect.(Com.file_lines(name))
 end
 
 function seats1(data)
@@ -116,7 +116,8 @@ function seats1(data)
 end
 
 t = read_file("i11t0")
-inp = read_file("i11")
+@time inp = read_file("i11")
+#= println(t) =#
 
 Test.@test seats1(t) === 37
 
