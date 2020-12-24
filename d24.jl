@@ -72,7 +72,7 @@ Test.@test a === 382
 
 #= B2/S12 on hexagonal lattice =#
 function two(hexmap::Set{Coord{2}})::Int
-    dirs = [(-1, 1), (1, -1), (-1, 0), (1, 0), (0, 1), (0, -1)]
+    dirs = ((-1, 1), (1, -1), (-1, 0), (1, 0), (0, 1), (0, -1))
     life(hexmap, dirs, 100, (2,), (1, 2))
 end
 

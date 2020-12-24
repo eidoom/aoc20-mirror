@@ -4,14 +4,14 @@ Coord{N} = NTuple{N,Int}
 
 function life(
     state::Set{Coord{N}},
-    neighbourhood::Vector{Coord{N}},
+    neighbourhood::C,
     iterations::Int,
-    born::NTuple{B, Int},
-    survive::NTuple{S, Int},
-)::Int where {N, B, S}
+    born::NTuple{B,Int},
+    survive::NTuple{S,Int},
+)::Int where {N,B,S,M,C<:Union{Vector{Coord{N}},NTuple{M,Coord{N}}}}
     #=
-    Runs a cellular automaton and returns number of alive states at end
-    state: initial state
+    Runs a cellular automaton (CA) and returns number of alive states at end
+    state: initial state of CA
     neighbourhood: adjacent cells as lattice vectors
     iterations: number of iterations to run
     born, survive: rules of CA in r"B\d+/S\d+" form
