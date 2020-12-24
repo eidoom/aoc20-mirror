@@ -37,7 +37,7 @@ function builder(
     if isa(rule[1][1], Char)
         rule[1][1]
     else
-        as::Vector{Union{Char,String}} = []
+        as = Union{Char,String}[]
         for set in rule
             if length(set) === 1
                 if length(rule) === 1
@@ -97,7 +97,7 @@ function builder(
 end
 
 #= count how many messages match the first rule by seeing if they're in the list of all possible messages =#
-function one(rules, mesgs)
+function one(rules::Vector{Vector{Vector{Union{Int,Char}}}}, mesgs::Vector{SubString})::Int
     mesgs = Set(mesgs)
     allowed = builder(rules)
     length(intersect(mesgs, allowed))
@@ -127,7 +127,7 @@ Test.@test a === 224
 function cyk_parse(rules::Vector{Vector{Vector{Union{Int,Char}}}}, symbol::SubString)::Bool
     n = length(symbol)
 
-    table::BitArray{3} = BitArray(fill(false, (n, n, length(rules))))
+    table::BitArray{3} = BitArray{3}(fill(false, (n, n, length(rules))))
 
     for i = 1:n
         for a in axes(rules, 1)
@@ -165,7 +165,7 @@ end
 t2r, t2m = read_file("i19t2")
 Test.@test one(t2r, t2m) === 3
 
-function two(rules, mesgs)
+function two(rules::Vector{Vector{Vector{Union{Int,Char}}}}, mesgs::Vector{SubString})::Int
     count(mesg -> cyk_parse(rules, mesg), mesgs)
 end
 
@@ -203,8 +203,8 @@ r1_cnf[144] = [[32, 32]]
 r1_cnf[145] = [[9, 138]]
 r1_cnf[146] = [[12, 32]]
 #= remove unit rules =#
-r1_cnf[39] = [['a'],['b']]
+r1_cnf[39] = [['a'], ['b']]
 
-@time b = two(r1_cnf,m1)
+@time b = two(r1_cnf, m1)
 println(b)
-Test.@test b == 436
+Test.@test b === 436
