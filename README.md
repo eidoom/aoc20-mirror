@@ -155,3 +155,6 @@ Hexagonal B2/S12 cellular automaton.
 
 ### [25 Combo Breaker](https://adventofcode.com/250250/day/25)
 
+Cryptography
+
+* [Diffie–Hellman key exchange](https://en.wikipedia.org/wiki/Diffie%E2%80%93Hellman_key_exchange)
