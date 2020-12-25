@@ -4,7 +4,7 @@
 
 ## Language
 
-Using [Julia](https://julialang.org/) ([also](https://en.wikipedia.org/wiki/Julia_(programming_language))).
+Using [Julia](https://julialang.org/) ([Wikipedia](https://en.wikipedia.org/wiki/Julia_(programming_language))).
 
 * [Docs](https://docs.julialang.org/)
 
