@@ -153,5 +153,5 @@ Data structures
 
 Hexagonal B2/S12 cellular automaton.
 
-### [25](https://adventofcode.com/250250/day/25)
+### [25 Combo Breaker](https://adventofcode.com/250250/day/25)
 
