@@ -24,7 +24,7 @@ Strict [parser](https://en.wikipedia.org/wiki/Parsing#Computer_languages)
 
 ### [3 Toboggan Trajectory](https://adventofcode.com/2020/day/3)
 
-Loops and moduluses
+Loops and moduli
 
 ### [4 Passport Processing](https://adventofcode.com/2020/day/4)
 
